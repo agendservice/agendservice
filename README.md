@@ -1,16 +1,14 @@
 
-# Projeto CGJuris
+# Projeto AgendService
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/WBG-Coach/coach-admin/blob/main/LICENSE.md)
 
-Projeto com o sistema para controle de escritórios de advocacia
+Projeto do curso de full cycle
 
 ## Tecnologias Utilizadas
 - node: v16.19.0
 - npm: v8.19.3
-- php: v7.4.33
+- php: v8.2.33
 - mysql: v8.0
-- laravel: v8.83.13
-
+- laravel: v10.1
+- 
 ## Autor
-
-- [https://www.github.com/jmoreirafilho](https://www.github.com/jmoreirafilho)
