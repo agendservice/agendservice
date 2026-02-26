@@ -1,0 +1,46 @@
+{
+    "name": "Controle de Vendas e Afiliados",
+    "short_name": "Hyppe",
+    "start_url": "/",
+    "display": "standalone",
+    "theme_color": "#DAAA4F",
+    "background_color": "#DAAA4F",
+    "orientation": "portrait",
+      "scope": ".",
+      "description": "Sistema para gerenciamento de vendas e afiliados",
+      "dir": "ltr",
+      "lang": "pt-BR",
+    "icons": [
+      {
+        "src": "/images/logos/32.png",
+        "sizes": "32x32",
+        "type": "image/png"
+      },
+      {
+        "src": "/images/logos/48.png",
+        "sizes": "48x48",
+        "type": "image/png"
+      },
+      {
+        "src": "/images/logos/72.png",
+        "sizes": "72x72",
+        "type": "image/png"
+      },
+      {
+        "src": "/images/logos/96.png",
+        "sizes": "96x96",
+        "type": "image/png"
+      },
+      {
+        "src": "/images/logos/144.png",
+        "sizes": "144x144",
+        "type": "image/png"
+      },
+      {
+        "src": "/images/logos/192.png",
+        "sizes": "192x192",
+        "type": "image/png"
+      }
+    ]
+  }
+  

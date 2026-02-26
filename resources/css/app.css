@@ -1,0 +1,235 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=fallback');
+
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+
+/* Additional styles */
+@import 'additional-styles/utility-patterns.css';
+@import 'additional-styles/flatpickr.css';
+
+@import 'tailwindcss/utilities';
+
+button.dark {
+    @apply bg-gray-900 text-gray-100 hover:bg-gray-800 dark:bg-gray-100 dark:text-gray-800 dark:hover:bg-white;
+}
+
+button.green {
+    @apply bg-green-600 text-white hover:bg-green-800 dark:bg-green-100 dark:text-green-800 dark:hover:bg-white;
+}
+
+button.blue {
+    @apply bg-blue-950 text-white hover:bg-blue-600 dark:bg-blue-400 dark:text-blue-50 dark:hover:bg-white;
+}
+
+button.red {
+    @apply bg-red-600 text-white hover:bg-red-800 dark:bg-red-100 dark:text-red-800 dark:hover:bg-white;
+}
+
+button.outlined {
+    @apply bg-white text-gray-600 border-gray-300 hover:bg-violet-200 hover:text-gray-800 dark:bg-gray-800 dark:text-white dark:hover:bg-white dark:hover:text-gray-800;
+}
+
+button.violet {
+    @apply bg-violet-600 text-white dark:bg-violet-200 dark:text-violet-800;
+}
+
+button.primary {
+    @apply bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700/60 hover:border-gray-300 dark:hover:border-gray-600 text-gray-800 dark:text-gray-300;
+}
+
+button.disabled {
+    @apply bg-gray-900 text-gray-100 hover:bg-gray-800 dark:bg-gray-100 dark:text-gray-800 dark:hover:bg-white disabled:border-gray-200 dark:disabled:border-gray-700 disabled:bg-white dark:disabled:bg-gray-800 disabled:text-gray-300 dark:disabled:text-gray-600 disabled:cursor-not-allowed;
+}
+
+div.violet {
+    @apply bg-violet-900 text-violet-100 dark:bg-violet-100 dark:text-violet-800;
+}
+
+div.gray {
+    @apply bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400;
+}
+
+div.green {
+    @apply bg-green-600 text-white dark:bg-green-100 dark:text-green-800;
+}
+
+div.red {
+    @apply bg-red-600 text-white dark:bg-red-100 dark:text-red-800;
+}
+
+.row {
+    @apply grid grid-cols-12 gap-2;
+}
+.cols-1 {
+    @apply col-span-1;
+}
+.cols-2 {
+    @apply col-span-2;
+}
+.cols-3 {
+    @apply col-span-3;
+}
+.cols-4 {
+    @apply col-span-4;
+}
+.cols-5 {
+    @apply col-span-5;
+}
+.cols-6 {
+    @apply col-span-6;
+}
+.cols-7 {
+    @apply col-span-7;
+}
+.cols-8 {
+    @apply col-span-8;
+}
+.cols-9 {
+    @apply col-span-9;
+}
+.cols-10 {
+    @apply col-span-10;
+}
+.cols-11 {
+    @apply col-span-11;
+}
+.cols-12 {
+    @apply col-span-12;
+}
+.cols-sm-1 {
+    @apply sm:col-span-1;
+}
+.cols-sm-2 {
+    @apply sm:col-span-2;
+}
+.cols-sm-3 {
+    @apply sm:col-span-3;
+}
+.cols-sm-4 {
+    @apply sm:col-span-4;
+}
+.cols-sm-5 {
+    @apply sm:col-span-5;
+}
+.cols-sm-6 {
+    @apply sm:col-span-6;
+}
+.cols-sm-7 {
+    @apply sm:col-span-7;
+}
+.cols-sm-8 {
+    @apply sm:col-span-8;
+}
+.cols-sm-9 {
+    @apply sm:col-span-9;
+}
+.cols-sm-10 {
+    @apply sm:col-span-10;
+}
+.cols-sm-11 {
+    @apply sm:col-span-11;
+}
+.cols-sm-12 {
+    @apply sm:col-span-12;
+}
+.cols-md-1 {
+    @apply md:col-span-1;
+}
+.cols-md-2 {
+    @apply md:col-span-2;
+}
+.cols-md-3 {
+    @apply md:col-span-3;
+}
+.cols-md-4 {
+    @apply md:col-span-4;
+}
+.cols-md-5 {
+    @apply md:col-span-5;
+}
+.cols-md-6 {
+    @apply md:col-span-6;
+}
+.cols-md-7 {
+    @apply md:col-span-7;
+}
+.cols-md-8 {
+    @apply md:col-span-8;
+}
+.cols-md-9 {
+    @apply md:col-span-9;
+}
+.cols-md-10 {
+    @apply md:col-span-10;
+}
+.cols-md-11 {
+    @apply md:col-span-11;
+}
+.cols-md-12 {
+    @apply md:col-span-12;
+}
+.cols-lg-1 {
+    @apply lg:col-span-1;
+}
+.cols-lg-2 {
+    @apply lg:col-span-2;
+}
+.cols-lg-3 {
+    @apply lg:col-span-3;
+}
+.cols-lg-4 {
+    @apply lg:col-span-4;
+}
+.cols-lg-5 {
+    @apply lg:col-span-5;
+}
+.cols-lg-6 {
+    @apply lg:col-span-6;
+}
+.cols-lg-7 {
+    @apply lg:col-span-7;
+}
+.cols-lg-8 {
+    @apply lg:col-span-8;
+}
+.cols-lg-9 {
+    @apply lg:col-span-9;
+}
+.cols-lg-10 {
+    @apply lg:col-span-10;
+}
+.cols-lg-11 {
+    @apply lg:col-span-11;
+}
+.cols-lg-12 {
+    @apply lg:col-span-12;
+}
+.pagina {
+    @apply inline-flex items-center justify-center leading-5 px-3.5 py-2 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-900 border border-gray-200 dark:border-gray-700/60 text-gray-600 dark:text-gray-300;
+}
+.pagina-selecionada {
+    @apply leading-5 px-3.5 py-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700/60 text-violet-500;
+}
+
+tr.green {
+    @apply bg-green-400 text-white;
+}
+tr.red {
+    @apply bg-red-400 text-white;
+}
+
+.flatpickr-calendar {
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+@font-face {
+    font-family: 'Raleway';
+    src: url('/fonts/Raleway.ttf');
+}
