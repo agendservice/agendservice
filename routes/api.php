@@ -3,10 +3,21 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-// No routes
-
 use App\Http\Controllers\UsuariosController;
+use App\Http\Controllers\EmpresasController;
+use App\Http\Controllers\ServicosController;
+use App\Http\Controllers\AgendamentosController;
+use App\Http\Controllers\ClientesController;
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\FuncionariosController;
 
-Route::controller(UsuariosController::class)->group(function () {
-    Route::get('/usuarios', 'buscar');
-});
+
+Route::apiResource('empresas', EmpresasController::class);
+Route::apiResource('servicos', ServicosController::class);
+Route::apiResource('agendamentos', AgendamentosController::class);
+Route::apiResource('funcionarios', FuncionariosController::class);
+Route::apiResource('usuarios', UsuariosController::class)->names([
+    'index' => 'usuarios.index'
+]);
+Route::get('/clientes/{id}/historico', [ClientesController::class, 'historico']);
+Route::post('/login', [LoginController::class, 'login']);
