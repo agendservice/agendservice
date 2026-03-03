@@ -13,8 +13,17 @@ db:
 composer_install:
 	cd docker && docker compose exec -T php bash -c "composer install"
 
+npm_install:
+	cd docker && docker compose exec -T node bash -c "npm install"
+
+env:
+	cd docker && docker compose exec -T php bash -c "cp .env.example .env"
+
 down:
 	cd docker && docker compose down
+
+key:
+	cd docker && docker compose exec app php artisan key:generate
 
 migrate:
 	cd docker && docker compose exec app php artisan migrate
