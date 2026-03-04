@@ -18,11 +18,8 @@ class UsuarioResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'empresa_id' => $this->empresa_id,
             'nome' => $this->nome,
-            'sobrenome' => $this->sobrenome,
-            'cpf' => $this->cpf,
-            'status' => $this->status_indicacao ?? $this->status
+            'email' => $this->email,
         ];
     }
 }

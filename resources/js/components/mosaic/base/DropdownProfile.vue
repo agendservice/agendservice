@@ -63,16 +63,8 @@ export default {
         window.location = '/';
       })
     },
-    buscarUsuarioLogado: function () {
-      this.loader = true;
-      axios.post('/perfil', {}).then((response) => {
-        this.perfil = response.data
-        this.loader = false;
-      })
-    }
   },
   mounted() {
-    this.buscarUsuarioLogado(); // Chamada aqui
   },
   components: {
     Overlay

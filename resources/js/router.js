@@ -4,6 +4,8 @@ const routerHistory = createWebHistory()
 
 import Login from './views/Login.vue';
 import ResetSenha from './views/RedefinirSenha.vue';
+import Dashboard from './views/usuario/dashboard/Home.vue';
+import CrudBlank from './views/usuario/crudBlank/Home.vue';
 
 
 const router = createRouter({
@@ -19,6 +21,16 @@ const router = createRouter({
       path: '/redefinir-senha',
       name: 'Resetar Senha',
       component: ResetSenha
+    },
+    {
+      path: '/dashboard',
+      name: 'Dashboard',
+      component: Dashboard
+    },
+    {
+      path: '/crud-blank',
+      name: 'CRUD Blank',
+      component: CrudBlank
     },
   ]
 })
