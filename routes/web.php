@@ -39,6 +39,19 @@ Route::get('/', function () {
     }
 })->name('home');
 
+Use App\Http\Controllers\UsuarioController;
+Route::controller(UsuarioController::class)->group(function () {
+    Route::post('/login', 'login');
+    Route::middleware('auth')->group(function () {
+        Route::post('/usuario', 'index');
+        Route::get('/usuario/{id}', 'show');
+        Route::post('/menu', 'menu');
+        Route::post('/usuario/cadastrar', 'store');
+        Route::put('/usuario/atualizar', 'update');
+        Route::post('/logout', 'logout');
+    });
+});
+
 Route::get('/{any}', function ($any) {
     if (\Auth::check()) {
         $user = \Auth::user();

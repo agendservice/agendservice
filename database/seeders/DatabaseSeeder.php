@@ -14,13 +14,7 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         $this->call([
-            // PRIMEIRO: Garante que os usuários essenciais existam.
-            EssentialUsersSeeder::class,
-
-            // SEGUNDO: Cria o cenário de teste com os parceiros.
-            CenarioIndicacaoSeeder::class,
-
-            // Adicione outros seeders aqui se necessário...
+            UsuarioSeeder::class,
         ]);
     }
 }

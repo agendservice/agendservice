@@ -74,18 +74,6 @@
       </div> 
     </div>
 
-    <div v-if="statusAssinatura === 'vencida'" class="fixed bottom-6 right-6 z-50">
-      
-      <button 
-        @click="abrirModalPagamento"
-        class="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-full shadow-lg transition-transform transform hover:scale-105 animate-bounce-slow"
-      >
-        <i class="fas fa-exclamation-circle"></i>
-        <span class="font-bold">Regularizar Mensalidade</span>
-      </button>
-
-      <ModalPagamento :is-open="exibirModal" @close="exibirModal = false" />
-    </div>
     </div>
 </template>
 
@@ -148,21 +136,24 @@ const isAdmin = computed(() => usuarioLogado.value.acesso_id === 2);
 
 // --- Lifecycle ---
 onMounted(() => {
-  buscarUsuarioLogado();
 });
 
 onUnmounted(() => {
   if (pollingInterval) clearInterval(pollingInterval);
 });
-// --- Métodos de Usuário ---
-const buscarUsuarioLogado = () => {
-  usuarioLogado.value = window.laravel_flash.usuario || {};
-};
+
 
 // --- Métodos de Pagamento ---
 const abrirModalPagamento = () => {
     exibirModal.value = true
 };
+
+// --- Expor propriedades para o template ref ---
+defineExpose({
+  exibirFormulario,
+  exibirRemover,
+  modalFiltros
+});
 </script>
 
 <style scoped>
