@@ -17,7 +17,7 @@ class Telefone implements Rule
     public function passes($attribute, $value)
     {
         $telefone = preg_replace('/[^0-9]/is', '', $value);
-        
+
         if (strlen($telefone) < 10 || strlen($telefone) > 11) {
             return false;
         }

@@ -35,7 +35,7 @@ class FuncionariosController extends Controller
     public function show($id)
     {
         return response()->json([
-            "id" => (int)$id,
+            "id" => (int) $id,
             "nome" => "Funcionário Exemplo",
             "email" => "exemplo@barbearia.com"
         ]);
@@ -45,7 +45,7 @@ class FuncionariosController extends Controller
     {
         return response()->json([
             "message" => "Funcionário atualizado com sucesso",
-            "data" => array_merge($request->all(), ["id" => (int)$id])
+            "data" => array_merge($request->all(), ["id" => (int) $id])
         ]);
     }
 

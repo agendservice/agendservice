@@ -22,7 +22,7 @@ class CheckUserAccess
         }
 
         $user = Auth::user();
-        
+
         // Se não foram especificados níveis de acesso, permite para qualquer usuário autenticado
         if (empty($allowedAccessLevels)) {
             return $next($request);

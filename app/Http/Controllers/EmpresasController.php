@@ -35,7 +35,7 @@ class EmpresasController extends Controller
     public function show($id)
     {
         return response()->json([
-            "id" => (int)$id,
+            "id" => (int) $id,
             "nome" => "Empresa Exemplo",
             "email" => "exemplo@empresa.com"
         ]);
@@ -45,7 +45,7 @@ class EmpresasController extends Controller
     {
         return response()->json([
             "message" => "Empresa atualizada com sucesso",
-            "data" => array_merge($request->all(), ["id" => (int)$id])
+            "data" => array_merge($request->all(), ["id" => (int) $id])
         ]);
     }
 

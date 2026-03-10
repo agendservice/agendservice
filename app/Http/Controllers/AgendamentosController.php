@@ -46,7 +46,7 @@ class AgendamentosController extends Controller
     public function show($id)
     {
         return response()->json([
-            "id" => (int)$id,
+            "id" => (int) $id,
             "status" => "confirmado",
             "dataHoraInicio" => "2026-03-10 15:00:00"
         ]);
@@ -56,7 +56,7 @@ class AgendamentosController extends Controller
     {
         return response()->json([
             "message" => "Agendamento atualizado com sucesso",
-            "data" => array_merge($request->all(), ["id" => (int)$id])
+            "data" => array_merge($request->all(), ["id" => (int) $id])
         ]);
     }
 

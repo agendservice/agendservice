@@ -25,7 +25,7 @@ class UsuariosController extends Controller
                 'password' => 'required|string|min:8',
                 'telefone' => 'required|string|max:20',
                 'status' => 'string|in:ativo,inativo',
-            ],[
+            ], [
                 'nome.required' => 'O campo nome é obrigatório.',
                 'email.required' => 'O campo email é obrigatório.',
                 'email.email' => 'O campo email deve ser um endereço de email válido.',
@@ -90,7 +90,7 @@ class UsuariosController extends Controller
                 'password' => 'string|min:8',
                 'telefone' => 'string|max:20',
                 'status' => 'string|in:ativo,inativo',
-            ],[
+            ], [
                 'email.unique' => 'O email já está em uso.',
                 'password.min' => 'A senha deve conter pelo menos 8 caracteres.',
                 'status.in' => 'O campo status deve ser "ativo" ou "inativo".',

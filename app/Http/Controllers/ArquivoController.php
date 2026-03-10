@@ -22,7 +22,7 @@ class ArquivoController extends Controller
 
         $file = $request->file('file');
         $nomeOriginal = $file->getClientOriginalName();
-        
+
         $path = $file->store('arquivos', 'public');
 
         $user_id = \Auth::user()->id;
@@ -31,9 +31,9 @@ class ArquivoController extends Controller
                               ->first();
 
         $arquivo = Arquivo::create([
-            'user_id'       => $user_id, 
+            'user_id'       => $user_id,
             'indicacao_id'  => $indicacao ? $indicacao->id : '1',
-            'tipo_documento'=> $request->input('tipo_documento'),
+            'tipo_documento' => $request->input('tipo_documento'),
             'nome_original' => $nomeOriginal,
             'path'          => $path,
             'mime_type'     => $file->getMimeType(),
@@ -64,9 +64,9 @@ class ArquivoController extends Controller
     // consulta os documentos ja enviados pelo usuario
     public function meusDocumentos(Request $request)
     {
-        if($request->has('user_id')){
+        if ($request->has('user_id')) {
             $user_id = $request->input('user_id');
-        }else{
+        } else {
             $user_id = \Auth::user()->id;
         }
 
@@ -74,7 +74,7 @@ class ArquivoController extends Controller
         $indicacao = Indicacao::where('indicado_id', $user_id)
                               ->orderBy('created_at', 'desc')
                               ->first();
-        
+
         if (!$indicacao) {
             return response()->json([
                 'status' => 'sem_indicacao',
@@ -87,7 +87,7 @@ class ArquivoController extends Controller
 
         $agendamento = null;
 
-        if($status === INDICACAO::STATUS_MENTORIA_AGENDADA){
+        if ($status === INDICACAO::STATUS_MENTORIA_AGENDADA) {
             $agendamento = AgendamentoResource::make(
                 Agendamento::where('indicacao_id', $indicacao->id)
                                        ->orderBy('created_at', 'desc')
@@ -118,7 +118,7 @@ class ArquivoController extends Controller
     public function deletar($id)
     {
         $arquivo = Arquivo::findOrFail($id);
-        
+
         // Verifica se o usuário autenticado é o dono do arquivo
         if ($arquivo->user_id !== auth()->id()) {
             return response()->json([
@@ -136,15 +136,16 @@ class ArquivoController extends Controller
         return response()->json(['message' => 'Arquivo deletado com sucesso']);
     }
 
-    public function analiseDocumentos() {
+    public function analiseDocumentos()
+    {
         // Verifica no banco de dados se todos os documentos foram enviados
         $user_id = \Auth::user()->id;
-        
+
         // Busca a indicação mais recente do usuário
         $indicacao = Indicacao::where('indicado_id', $user_id)
                               ->orderBy('created_at', 'desc')
                               ->first();
-        
+
         if (!$indicacao) {
             return response()->json([
                 'erro' => 'SEM_INDICACAO',
@@ -154,7 +155,7 @@ class ArquivoController extends Controller
 
         // Busca os arquivos pela indicação específica
         $arquivos = Arquivo::where('indicacao_id', $indicacao->id);
-        
+
         $tiposDocumentosNecessarios = [
             'CPF',
             'CONTRATO_CONSORCIO',
@@ -173,7 +174,7 @@ class ArquivoController extends Controller
             // Atualiza o status da indicação para 'analise' se todos os documentos foram enviados
             $indicacao->status = 'analise';
             $indicacao->save();
-            
+
             return response()->json([
                 'message' => 'Todos os documentos foram enviados. Sua indicação será analisada.'
             ], 200);

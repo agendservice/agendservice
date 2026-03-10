@@ -24,14 +24,14 @@ class Cpf implements Rule
             $soma = 0;
             for ($c = 0; $c < $t; $c++) {
                 $multiplicador = (($t + 1) - $c);
-                $digitoAtual = (int)$cpf[$c];
+                $digitoAtual = (int) $cpf[$c];
                 $soma += $digitoAtual * $multiplicador;
             }
 
             $resto = ($soma * 10) % 11;
             $digitoCalculado = ($resto == 10 || $resto == 11) ? 0 : $resto;
-            
-            $digitoReal = (int)$cpf[$t];
+
+            $digitoReal = (int) $cpf[$t];
 
             if ($digitoReal !== $digitoCalculado) {
                 return false;

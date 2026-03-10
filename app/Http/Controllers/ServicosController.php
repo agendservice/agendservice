@@ -53,7 +53,7 @@ class ServicosController extends Controller
     public function show($id)
     {
         return response()->json([
-            "id" => (int)$id,
+            "id" => (int) $id,
             "nome" => "Serviço Exemplo",
             "preco" => 50.00
         ]);
@@ -63,7 +63,7 @@ class ServicosController extends Controller
     {
         return response()->json([
             "message" => "Serviço atualizado com sucesso",
-            "data" => array_merge($request->all(), ["id" => (int)$id])
+            "data" => array_merge($request->all(), ["id" => (int) $id])
         ]);
     }
 

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
 use App\Models\Acesso;
 use App\Models\Afiliado;
 use App\Models\Usuario;
@@ -21,18 +20,22 @@ class AcessoController extends Controller
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function gerarCodigoRedefinicao(Request $request) {
-        
+    public function gerarCodigoRedefinicao(Request $request)
+    {
+
         // 1. VALIDAÇÃO PRIMEIRO
         // Isso retorna um erro 422 (Unprocessable Entity) automaticamente,
         // que é o correto para erros de validação.
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|email'
-        ],
-        [
-            'email.required' => 'O campo e-mail é obrigatório.',
-            'email.email' => 'O campo e-mail deve ser um endereço de e-mail válido.'
-        ]);
+        $validator = Validator::make(
+            $request->all(),
+            [
+                'email' => 'required|email'
+            ],
+            [
+                'email.required' => 'O campo e-mail é obrigatório.',
+                'email.email' => 'O campo e-mail deve ser um endereço de e-mail válido.'
+            ]
+        );
 
         if ($validator->fails()) {
             return response()->json(['message' => $validator->errors()->first()], 422);
@@ -53,10 +56,10 @@ class AcessoController extends Controller
             // 4. USA A TABELA 'password_resets' PADRÃO DO LARAVEL
             // Isso é mais seguro, pois inclui um timestamp de expiração.
             DB::beginTransaction();
-            
+
             // Remove códigos antigos deste e-mail
             DB::table('password_resets')->where('email', $request->email)->delete();
-            
+
             // Salva o novo código (sem hash, pois o usuário precisa digitá-lo)
             DB::table('password_resets')->insert([
                 'email' => $request->email,
@@ -77,11 +80,12 @@ class AcessoController extends Controller
             // Loga o erro real para você poder ver no servidor
             \Log::error('Erro ao enviar e-mail de redefinição: ' . $e->getMessage());
             return response()->json(['message' => 'Erro ao enviar o e-mail. Tente novamente mais tarde.',
-        'erro' => $e->getMessage()], 500);
+                'erro' => $e->getMessage()], 500);
         }
     }
 
-    public function verificarCodigoRedefinicao(Request $request) {
+    public function verificarCodigoRedefinicao(Request $request)
+    {
         $dadosValidados = Validator::make($request->all(), [
             'email' => 'required|email',
             'codigo' => 'required',
@@ -125,7 +129,8 @@ class AcessoController extends Controller
         }
     }
 
-    public function redefinirSenha (Request $request) {
+    public function redefinirSenha(Request $request)
+    {
         if (!$request->token || !$request->email || !$request->password || !$request->password_confirmation || ($request->password !== $request->password_confirmation)) {
             return response()->json(['message' => 'Token Inválido!'], 500);
         }
@@ -231,11 +236,12 @@ class AcessoController extends Controller
             ], 500);
         }
     }
-    
-    public function remover ($id) {
+
+    public function remover($id)
+    {
         \DB::beginTransaction();
         try {
-            
+
             Usuario::where('acesso_id', $id)->update(['acesso_id' => null]);
             Acesso::destroy($id);
 
@@ -249,8 +255,8 @@ class AcessoController extends Controller
             ], 500);
         }
     }
-    
-    public function perfil (Request $request)
+
+    public function perfil(Request $request)
     {
         return \Auth::user();
     }

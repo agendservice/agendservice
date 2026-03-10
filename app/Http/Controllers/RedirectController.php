@@ -17,7 +17,7 @@ class RedirectController extends Controller
         }
 
         $user = Auth::user();
-        
+
         if ($user->acesso_id == 2) {
             // Admin - redireciona para dashboard admin
             return redirect()->route('dashboard.admin');

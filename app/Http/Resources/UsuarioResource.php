@@ -3,8 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-
-use \Carbon\Carbon;
+use Carbon\Carbon;
 
 class UsuarioResource extends JsonResource
 {

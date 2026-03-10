@@ -9,7 +9,8 @@ use Illuminate\Queue\SerializesModels;
 
 class RedefinirSenhaMail extends Mailable
 {
-    use Queueable, SerializesModels;
+    use Queueable;
+    use SerializesModels;
 
     public $codigo;
     public $nomeUsuario;
@@ -35,7 +36,7 @@ class RedefinirSenhaMail extends Mailable
     {
         // Este método 'build()' substitui os métodos 'envelope()' e 'content()'.
         // Ele usará automaticamente o remetente (From) definido no seu .env.
-        
+
         return $this
             ->subject('Seu Código de Redefinição de Senha') // Define o assunto
             ->view('emails.redefinir_senha')              // Define o template Blade

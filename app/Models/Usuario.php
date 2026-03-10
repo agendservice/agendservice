@@ -11,10 +11,11 @@ use Laravel\Sanctum\HasApiTokens;
 use App\Models\Rejeicao;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
-
 class Usuario extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasApiTokens;
+    use HasFactory;
+    use Notifiable;
 
     protected $table = 'usuarios';
 

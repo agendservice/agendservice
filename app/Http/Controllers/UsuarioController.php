@@ -3,36 +3,30 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
 use App\Models\Usuario;
 use App\Models\Empresa;
 use App\Http\Resources\UsuarioResource;
-
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Log;
-
 use App\Mail\NotificacaoCadastro;
 use App\Mail\ConfirmacaoCadastro;
-
 use Illuminate\Support\Facades\Auth;
-
 use App\Rules\Cpf;
 use App\Rules\Cnpj;
 use App\Rules\Telefone;
 
 class UsuarioController extends Controller
 {
-    
     public function login(Request $request)
     {
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
             $usuario = Usuario::whereRaw("upper(email) = upper(?)", [$request->email])->first();
             Auth::login($usuario);
             $user = Auth::user();
-                return response()->json(['redirect' => '/dashboard']);
+            return response()->json(['redirect' => '/dashboard']);
         }
 
         return response()->json([
@@ -40,7 +34,7 @@ class UsuarioController extends Controller
             'message'   =>  'Falha na Autenticação.'
         ], 500);
     }
-    
+
     public function logout(Request $request)
     {
         Auth::logout();
