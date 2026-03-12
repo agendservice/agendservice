@@ -29,4 +29,4 @@ migrate:
 	cd docker && docker compose exec app php artisan migrate
 
 style:
-    docker compose exec -T php bash -c "php vendor/bin/php-cs-fixer fix --dry-run --diff -vvv"
+	cd docker && docker compose exec -T app bash -c "php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php --dry-run --diff -vvv"
