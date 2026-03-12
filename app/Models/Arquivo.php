@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -9,7 +11,7 @@ use Illuminate\Support\Facades\Storage;
 class Arquivo extends Model
 {
     use HasFactory;
-    
+
     protected $table = 'arquivos';
 
     protected $appends = ['public_url'];
@@ -21,9 +23,9 @@ class Arquivo extends Model
         'path',
         'mime_type',
         'size',
-        'status', 
+        'status',
         'rejeicao_motivo',
-        'indicacao_id'
+        'indicacao_id',
     ];
 
     public function getPublicUrlAttribute(): string
@@ -31,7 +33,7 @@ class Arquivo extends Model
         if ($this->path && Storage::disk('public')->exists($this->path)) {
             return Storage::disk('public')->url($this->path);
         }
-        
+
         return '';
     }
 }

@@ -1,15 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
 class RedefinirSenhaMail extends Mailable
 {
-    use Queueable, SerializesModels;
+    use Queueable;
+    use SerializesModels;
 
     public $codigo;
     public $nomeUsuario;
@@ -17,8 +19,8 @@ class RedefinirSenhaMail extends Mailable
     /**
      * Crie uma nova instância da mensagem.
      *
-     * @param string $codigo O código de 6 dígitos.
-     * @param string $nomeUsuario O nome do usuário.
+     * @param string $codigo      o código de 6 dígitos
+     * @param string $nomeUsuario o nome do usuário
      */
     public function __construct(string $codigo, string $nomeUsuario)
     {
@@ -35,7 +37,7 @@ class RedefinirSenhaMail extends Mailable
     {
         // Este método 'build()' substitui os métodos 'envelope()' e 'content()'.
         // Ele usará automaticamente o remetente (From) definido no seu .env.
-        
+
         return $this
             ->subject('Seu Código de Redefinição de Senha') // Define o assunto
             ->view('emails.redefinir_senha')              // Define o template Blade

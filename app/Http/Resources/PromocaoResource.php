@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -9,7 +11,8 @@ class PromocaoResource extends JsonResource
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
+     *
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
     public function toArray($request)
@@ -18,6 +21,7 @@ class PromocaoResource extends JsonResource
         if (date('Y-m-d') < $this->data_inicio || date('Y-m-d') > $this->data_fim) {
             $status = 'inativo';
         }
+
         return [
             'id' => $this->id,
             'empresa_id' => $this->empresa_id,
@@ -32,6 +36,7 @@ class PromocaoResource extends JsonResource
             'status' => $status,
         ];
     }
+
     private function formatarPreco($preco)
     {
         return number_format($preco, 2, ',', '.');

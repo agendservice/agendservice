@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -21,14 +23,14 @@ class ComissoesResource extends JsonResource
             'observacoes' => $this->observacoes,
             'arquivo_nota_fiscal' => $this->arquivo_nota_fiscal ?? null, // Compatibilidade
             'arquivo_comprovante_id' => $this->arquivo_comprovante_id ?? null, // Compatibilidade
-            'arquivo_nota' => $this->whenLoaded('arquivoNota', function() {
+            'arquivo_nota' => $this->whenLoaded('arquivoNota', function () {
                 return [
                     'id' => $this->arquivoNota->id,
                     'nome_original' => $this->arquivoNota->nome_original,
                     'public_url' => $this->arquivoNota->public_url,
                 ];
             }),
-            'arquivo_comprovante' => $this->whenLoaded('arquivoComprovante', function() {
+            'arquivo_comprovante' => $this->whenLoaded('arquivoComprovante', function () {
                 return [
                     'id' => $this->arquivoComprovante->id,
                     'nome_original' => $this->arquivoComprovante->nome_original,
@@ -56,7 +58,7 @@ class ComissoesResource extends JsonResource
             'pendente' => 'Aguardando Aprovação',
             'paga' => 'Paga',
             'confirmada' => 'Confirmada',
-            'rejeitada' => 'Rejeitada'
+            'rejeitada' => 'Rejeitada',
         ];
 
         return $statusMap[$this->status] ?? $this->status;

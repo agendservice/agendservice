@@ -27,3 +27,6 @@ key:
 
 migrate:
 	cd docker && docker compose exec app php artisan migrate
+
+style:
+    docker compose exec -T php bash -c "php vendor/bin/php-cs-fixer fix --dry-run --diff -vvv"
