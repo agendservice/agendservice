@@ -8,8 +8,8 @@ use PhpCsFixer\Finder;
 return (new Config())
     ->setRiskyAllowed(true)
     ->setRules([
-        'psrautoload' => true,
-        'PSR12' => true,
+        'psr_autoloading' => true,
+        '@PSR12' => true,
         '@Symfony' => true,
         '@Symfony:risky' => true,
         'array_push' => true,
