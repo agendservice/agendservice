@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -56,7 +58,7 @@ class ComissoesResource extends JsonResource
             'pendente' => 'Aguardando Aprovação',
             'paga' => 'Paga',
             'confirmada' => 'Confirmada',
-            'rejeitada' => 'Rejeitada'
+            'rejeitada' => 'Rejeitada',
         ];
 
         return $statusMap[$this->status] ?? $this->status;

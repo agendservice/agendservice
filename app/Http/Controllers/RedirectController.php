@@ -1,14 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class RedirectController extends Controller
 {
     /**
-     * Redireciona o usuário para o dashboard apropriado
+     * Redireciona o usuário para o dashboard apropriado.
      */
     public function dashboard()
     {
@@ -18,12 +19,12 @@ class RedirectController extends Controller
 
         $user = Auth::user();
 
-        if ($user->acesso_id == 2) {
+        if (2 == $user->acesso_id) {
             // Admin - redireciona para dashboard admin
             return redirect()->route('dashboard.admin');
-        } else {
-            // Parceiro - redireciona para dashboard padrão
-            return redirect()->route('dashboard.default');
         }
+
+        // Parceiro - redireciona para dashboard padrão
+        return redirect()->route('dashboard.default');
     }
 }

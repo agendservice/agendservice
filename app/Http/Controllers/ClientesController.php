@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+declare(strict_types=1);
 
-use Illuminate\Http\Request;
+namespace App\Http\Controllers;
 
 class ClientesController extends Controller
 {
@@ -10,19 +10,19 @@ class ClientesController extends Controller
     {
         $dados = [
             [
-                "id" => 95,
-                "servico" => [
-                    "id" => 2,
-                    "nome" => "Tratamento Capilar"
+                'id' => 95,
+                'servico' => [
+                    'id' => 2,
+                    'nome' => 'Tratamento Capilar',
                 ],
-                "empresa" => [
-                    "id" => 1,
-                    "nome" => "Barbearia Estilo"
+                'empresa' => [
+                    'id' => 1,
+                    'nome' => 'Barbearia Estilo',
                 ],
-                "dataHoraInicio" => "2026-01-10 15:00:00",
-                "status" => "concluido",
-                "observacao" => "Primeira sessão de tratamento."
-            ]
+                'dataHoraInicio' => '2026-01-10 15:00:00',
+                'status' => 'concluido',
+                'observacao' => 'Primeira sessão de tratamento.',
+            ],
         ];
 
         return response()->json($dados);

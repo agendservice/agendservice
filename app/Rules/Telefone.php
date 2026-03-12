@@ -1,24 +1,25 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Rules;
 
 use Illuminate\Contracts\Validation\Rule;
-use Illuminate\Support\Facades\Log;
 
 class Telefone implements Rule
 {
     /**
      * Determina se a regra de validação é aprovada.
      *
-     * @param  string  $attribute
-     * @param  mixed  $value
+     * @param string $attribute
+     *
      * @return bool
      */
     public function passes($attribute, $value)
     {
         $telefone = preg_replace('/[^0-9]/is', '', $value);
 
-        if (strlen($telefone) < 10 || strlen($telefone) > 11) {
+        if (\strlen($telefone) < 10 || \strlen($telefone) > 11) {
             return false;
         }
         if (preg_match('/(\d)\1{9,10}/', $telefone)) {

@@ -1,9 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
@@ -18,8 +19,8 @@ class RedefinirSenhaMail extends Mailable
     /**
      * Crie uma nova instância da mensagem.
      *
-     * @param string $codigo O código de 6 dígitos.
-     * @param string $nomeUsuario O nome do usuário.
+     * @param string $codigo      o código de 6 dígitos
+     * @param string $nomeUsuario o nome do usuário
      */
     public function __construct(string $codigo, string $nomeUsuario)
     {

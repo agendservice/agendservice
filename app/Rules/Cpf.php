@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Rules;
 
 use Illuminate\Contracts\Validation\Rule;
@@ -11,7 +13,7 @@ class Cpf implements Rule
         // Limpeza
         $cpf = preg_replace('/[^0-9]/', '', (string) $value);
 
-        if (strlen($cpf) != 11) {
+        if (11 != \strlen($cpf)) {
             return false;
         }
 
@@ -20,16 +22,16 @@ class Cpf implements Rule
         }
 
         // Validação Matemática
-        for ($t = 9; $t < 11; $t++) {
+        for ($t = 9; $t < 11; ++$t) {
             $soma = 0;
-            for ($c = 0; $c < $t; $c++) {
+            for ($c = 0; $c < $t; ++$c) {
                 $multiplicador = (($t + 1) - $c);
                 $digitoAtual = (int) $cpf[$c];
                 $soma += $digitoAtual * $multiplicador;
             }
 
             $resto = ($soma * 10) % 11;
-            $digitoCalculado = ($resto == 10 || $resto == 11) ? 0 : $resto;
+            $digitoCalculado = (10 == $resto || 11 == $resto) ? 0 : $resto;
 
             $digitoReal = (int) $cpf[$t];
 

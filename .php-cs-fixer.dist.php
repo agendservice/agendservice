@@ -8,9 +8,12 @@ use PhpCsFixer\Finder;
 return (new Config())
     ->setRiskyAllowed(true)
     ->setRules([
-        // '@auto' => true,
-        // '@auto:risky' => true,
+        'psrautoload' => true,
+        'PSR12' => true,
+        '@Symfony' => true,
+        '@Symfony:risky' => true,
         'array_push' => true,
+        'yoda_style' => false,
         'array_indentation' => true,
         'function_to_constant' => true,
         'explicit_string_variable' => true,
@@ -23,7 +26,7 @@ return (new Config())
     ->setFinder(
         (new Finder())
             // 💡 root folder to check
-            ->in('app')
+            ->in('app', 'database', 'routes', 'tests')
             // 💡 additional files, eg bin entry file
             // ->append([__DIR__.'/bin-entry-file'])
             // 💡 folders to exclude, if any

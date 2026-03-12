@@ -1,15 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
-use App\Models\Arquivo;
-use App\Models\Usuario;
-use App\Models\Indicacao;
-use App\Models\Agendamento;
 use App\Http\Resources\AgendamentoResource;
+use App\Http\Resources\ArquivosResource;
+use App\Models\Agendamento;
+use App\Models\Arquivo;
+use App\Models\Indicacao;
+use App\Models\Usuario;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use App\Http\Resources\ArquivosResource;
 
 class ArquivoController extends Controller
 {
@@ -31,14 +33,14 @@ class ArquivoController extends Controller
                               ->first();
 
         $arquivo = Arquivo::create([
-            'user_id'       => $user_id,
-            'indicacao_id'  => $indicacao ? $indicacao->id : '1',
+            'user_id' => $user_id,
+            'indicacao_id' => $indicacao ? $indicacao->id : '1',
             'tipo_documento' => $request->input('tipo_documento'),
             'nome_original' => $nomeOriginal,
-            'path'          => $path,
-            'mime_type'     => $file->getMimeType(),
-            'size'          => $file->getSize(),
-            'status'        => 'enviado'
+            'path' => $path,
+            'mime_type' => $file->getMimeType(),
+            'size' => $file->getSize(),
+            'status' => 'enviado',
         ]);
 
         // Verificar se a etapa atual foi completada e atualizar status da indicação
@@ -79,7 +81,7 @@ class ArquivoController extends Controller
             return response()->json([
                 'status' => 'sem_indicacao',
                 'arquivos' => [],
-                'message' => 'Usuário não possui indicação.'
+                'message' => 'Usuário não possui indicação.',
             ]);
         }
 
@@ -87,7 +89,7 @@ class ArquivoController extends Controller
 
         $agendamento = null;
 
-        if ($status === INDICACAO::STATUS_MENTORIA_AGENDADA) {
+        if (Indicacao::STATUS_MENTORIA_AGENDADA === $status) {
             $agendamento = AgendamentoResource::make(
                 Agendamento::where('indicacao_id', $indicacao->id)
                                        ->orderBy('created_at', 'desc')
@@ -123,7 +125,7 @@ class ArquivoController extends Controller
         if ($arquivo->user_id !== auth()->id()) {
             return response()->json([
                 'error' => 'Sem permissão',
-                'message' => 'Você não tem permissão para deletar este arquivo.'
+                'message' => 'Você não tem permissão para deletar este arquivo.',
             ], 403);
         }
 
@@ -149,7 +151,7 @@ class ArquivoController extends Controller
         if (!$indicacao) {
             return response()->json([
                 'erro' => 'SEM_INDICACAO',
-                'message' => 'Usuário não possui indicação.'
+                'message' => 'Usuário não possui indicação.',
             ], 400);
         }
 
@@ -176,21 +178,21 @@ class ArquivoController extends Controller
             $indicacao->save();
 
             return response()->json([
-                'message' => 'Todos os documentos foram enviados. Sua indicação será analisada.'
+                'message' => 'Todos os documentos foram enviados. Sua indicação será analisada.',
             ], 200);
-        } else {
-            return response()->json([
-                'erro' => 'DOCUMENTOS_FALTANDO',
-                'faltando' => array_values($faltando),
-                'message' => 'Ainda faltam documentos para serem enviados.'
-            ], 400);
         }
+
+        return response()->json([
+            'erro' => 'DOCUMENTOS_FALTANDO',
+            'faltando' => array_values($faltando),
+            'message' => 'Ainda faltam documentos para serem enviados.',
+        ], 400);
     }
 
     /**
-     * Verifica se uma etapa foi completada e atualiza o status da indicação
+     * Verifica se uma etapa foi completada e atualiza o status da indicação.
      */
-    private function verificarEtapaCompleta(Indicacao $indicacao)
+    private function verificarEtapaCompleta(Indicacao $indicacao): void
     {
         // Busca todos os arquivos da indicação
         $arquivos = Arquivo::where('indicacao_id', $indicacao->id)
@@ -212,13 +214,13 @@ class ArquivoController extends Controller
         $etapa3Completa = !array_diff($etapa3Docs, $tiposEnviados);
 
         // Atualizar status baseado na etapa completada
-        if ($etapa3Completa && $indicacao->status === Indicacao::STATUS_PAGAMENTO_PENDENTE) {
+        if ($etapa3Completa && Indicacao::STATUS_PAGAMENTO_PENDENTE === $indicacao->status) {
             // Etapa 3 completada - marcar pagamento para análise
             $indicacao->marcarPagamentoParaAnalise();
-        } elseif ($etapa2Completa && $indicacao->status === Indicacao::STATUS_CONTRATOS_PENDENTES) {
+        } elseif ($etapa2Completa && Indicacao::STATUS_CONTRATOS_PENDENTES === $indicacao->status) {
             // Etapa 2 completada - marcar contratos para análise
             $indicacao->marcarContratosParaAnalise();
-        } elseif ($etapa1Completa && $indicacao->status === Indicacao::STATUS_PENDENTE) {
+        } elseif ($etapa1Completa && Indicacao::STATUS_PENDENTE === $indicacao->status) {
             // Etapa 1 completada - marcar documentos pessoais para análise
             $indicacao->marcarDocumentosPessoaisParaAnalise();
         }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Rules;
 
 use Illuminate\Contracts\Validation\Rule;
@@ -9,8 +11,8 @@ class Cnpj implements Rule
     /**
      * Determina se a regra de validação é aprovada.
      *
-     * @param  string  $attribute
-     * @param  mixed  $value
+     * @param string $attribute
+     *
      * @return bool
      */
     public function passes($attribute, $value)
@@ -18,7 +20,7 @@ class Cnpj implements Rule
         $cnpj = preg_replace('/[^0-9]/', '', (string) $value);
 
         // Valida tamanho
-        if (strlen($cnpj) != 14) {
+        if (14 != \strlen($cnpj)) {
             return false;
         }
 
@@ -28,9 +30,9 @@ class Cnpj implements Rule
         }
 
         // Valida primeiro dígito verificador
-        for ($i = 0, $j = 5, $soma = 0; $i < 12; $i++) {
+        for ($i = 0, $j = 5, $soma = 0; $i < 12; ++$i) {
             $soma += $cnpj[$i] * $j;
-            $j = ($j == 2) ? 9 : $j - 1;
+            $j = (2 == $j) ? 9 : $j - 1;
         }
 
         $resto = $soma % 11;
@@ -40,9 +42,9 @@ class Cnpj implements Rule
         }
 
         // Valida segundo dígito verificador
-        for ($i = 0, $j = 6, $soma = 0; $i < 13; $i++) {
+        for ($i = 0, $j = 6, $soma = 0; $i < 13; ++$i) {
             $soma += $cnpj[$i] * $j;
-            $j = ($j == 2) ? 9 : $j - 1;
+            $j = (2 == $j) ? 9 : $j - 1;
         }
 
         $resto = $soma % 11;

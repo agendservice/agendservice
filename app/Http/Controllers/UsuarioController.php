@@ -1,37 +1,31 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Usuario;
-use App\Models\Empresa;
 use App\Http\Resources\UsuarioResource;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Str;
+use App\Models\Usuario;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\Log;
-use App\Mail\NotificacaoCadastro;
-use App\Mail\ConfirmacaoCadastro;
-use Illuminate\Support\Facades\Auth;
-use App\Rules\Cpf;
-use App\Rules\Cnpj;
-use App\Rules\Telefone;
 
 class UsuarioController extends Controller
 {
     public function login(Request $request)
     {
         if (Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
-            $usuario = Usuario::whereRaw("upper(email) = upper(?)", [$request->email])->first();
+            $usuario = Usuario::whereRaw('upper(email) = upper(?)', [$request->email])->first();
             Auth::login($usuario);
             $user = Auth::user();
+
             return response()->json(['redirect' => '/dashboard']);
         }
 
         return response()->json([
-            'code'      =>  500,
-            'message'   =>  'Falha na Autenticação.'
+            'code' => 500,
+            'message' => 'Falha na Autenticação.',
         ], 500);
     }
 
@@ -40,16 +34,16 @@ class UsuarioController extends Controller
         Auth::logout();
 
         return response()->json([
-            'code'      =>  200
+            'code' => 200,
         ], 200);
     }
-
 
     public function menu()
     {
         $menu = [
             ['titulo' => 'Crud blank', 'link' => '/crud-blank', 'icone' => 'mdi-file-document-outline'],
         ];
+
         return response()->json($menu);
     }
 
@@ -59,13 +53,14 @@ class UsuarioController extends Controller
         if ($request->has('filtros')) {
             $filtros = $request->input('filtros');
             if (isset($filtros['nome'])) {
-                $usuarios->where('nome', 'like', '%' . $filtros['nome'] . '%');
+                $usuarios->where('nome', 'like', '%'.$filtros['nome'].'%');
             }
             if (isset($filtros['email'])) {
-                $usuarios->where('email', 'like', '%' . $filtros['email'] . '%');
+                $usuarios->where('email', 'like', '%'.$filtros['email'].'%');
             }
         }
         $usuarios = $usuarios->paginate($request->input('per_page', 10));
+
         return response()->json(UsuarioResource::collection($usuarios)->response()->getData(true));
     }
 
@@ -80,7 +75,7 @@ class UsuarioController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'code' => 422,
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
 
@@ -96,6 +91,7 @@ class UsuarioController extends Controller
     public function show($id)
     {
         $usuario = Usuario::findOrFail($id);
+
         return response()->json(new UsuarioResource($usuario));
     }
 
@@ -112,7 +108,7 @@ class UsuarioController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'code' => 422,
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
 
@@ -125,5 +121,4 @@ class UsuarioController extends Controller
 
         return response()->json(new UsuarioResource($usuario));
     }
-
 }
