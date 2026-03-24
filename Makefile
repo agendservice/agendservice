@@ -5,19 +5,19 @@ up_build:
 	cd docker && docker compose up -d --build
 
 bash:
-	cd docker && docker compose exec php bash
+	cd docker && docker compose exec app bash
 
 db:
 	cd docker && docker compose exec mysql bash
 
 composer_install:
-	cd docker && docker compose exec -T php bash -c "composer install"
+	cd docker && docker compose exec -T app bash -c "composer install"
 
 npm_install:
 	cd docker && docker compose exec -T node bash -c "npm install"
 
 env:
-	cd docker && docker compose exec -T php bash -c "cp .env.example .env"
+	cd docker && docker compose exec -T app bash -c "cp .env.example .env"
 
 down:
 	cd docker && docker compose down
@@ -30,3 +30,6 @@ migrate:
 
 style:
 	cd docker && docker compose exec -T app bash -c "php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php --dry-run --diff -vvv"
+
+test:
+	cd docker && docker compose exec -T app bash -c "php artisan test"
