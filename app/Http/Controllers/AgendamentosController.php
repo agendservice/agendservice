@@ -16,7 +16,7 @@ class AgendamentosController extends Controller
 {
     public function __construct(
         private readonly AgendamentoIntervalosRepository $agendamentoIntervalosRepository,
-        private readonly AgendamentoService $agendamentoService
+        private readonly AgendamentoService $agendamentoService,
     ) {
     }
 
