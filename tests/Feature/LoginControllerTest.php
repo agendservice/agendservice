@@ -54,4 +54,26 @@ class LoginControllerTest extends TestCase
 
         $response->assertStatus(422);
     }
+
+    public function test_nao_pode_realizar_login_com_email_inexistente()
+    {
+        $payload = [
+            'email' => 'inexistente@email.com',
+            'password' => 'senha123'
+        ];
+
+        $response = $this->postJson('/api/login', $payload);
+
+        $response->assertStatus(422)
+                 ->assertJsonPath('message', 'As credenciais fornecidas estão incorretas.')
+                 ->assertJsonPath('errors.email.0', 'As credenciais fornecidas estão incorretas.');
+    }
+
+    public function test_nao_pode_realizar_login_com_payload_invalido()
+    {
+        $response = $this->postJson('/api/login', []);
+
+        $response->assertStatus(422)
+                 ->assertJsonValidationErrors(['email', 'password']);
+    }
 }
