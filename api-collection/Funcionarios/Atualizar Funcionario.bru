@@ -1,0 +1,23 @@
+meta {
+  name: Atualizar Funcionario
+  type: http
+  seq: 2
+}
+
+put {
+  url: {{baseUrl}}/api/funcionarios/{{funcionarioId}}
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "nome": "Carlos Souza Editado"
+  }
+}
+
+tests {
+  test("Status deve ser 200", function() {
+    expect(res.status).to.equal(200);
+  });
+}

@@ -4,55 +4,48 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\FuncionarioResource;
+use App\Models\Funcionario;
 use Illuminate\Http\Request;
 
 class FuncionariosController extends Controller
 {
     public function index()
     {
-        return response()->json([
-            [
-                'id' => 2,
-                'nome' => 'Carlos Souza',
-                'email' => 'carlos@barbearia.com',
-                'empresa' => [
-                    'id' => 1,
-                    'nome' => 'Barbearia Estilo',
-                ],
-                'ativo' => true,
-                'criadoEm' => '2026-02-18 10:00:00',
-                'atualizadoEm' => '2026-02-18 10:00:00',
-            ],
-        ]);
+        return FuncionarioResource::collection(Funcionario::with(['empresa', 'usuario'])->get());
     }
 
     public function store(Request $request)
     {
-        return response()->json([
-            'message' => 'Funcionário cadastrado com sucesso',
-            'data' => array_merge($request->all(), ['id' => 3]),
-        ], 201);
+        $validated = $request->validate([
+            'empresa_id' => 'required|exists:empresas,id',
+            'usuario_id' => 'nullable|exists:usuarios,id',
+            'nome' => 'required|string|max:255',
+            'especialidade' => 'nullable|string|max:255',
+        ]);
+        $funcionario = Funcionario::create($validated);
+
+        return (new FuncionarioResource($funcionario))->response()->setStatusCode(201);
     }
 
     public function show($id)
     {
-        return response()->json([
-            'id' => (int) $id,
-            'nome' => 'Funcionário Exemplo',
-            'email' => 'exemplo@barbearia.com',
-        ]);
+        return new FuncionarioResource(Funcionario::with(['empresa', 'usuario'])->findOrFail($id));
     }
 
     public function update(Request $request, $id)
     {
-        return response()->json([
-            'message' => 'Funcionário atualizado com sucesso',
-            'data' => array_merge($request->all(), ['id' => (int) $id]),
-        ]);
+        $funcionario = Funcionario::findOrFail($id);
+        $funcionario->update($request->all());
+
+        return new FuncionarioResource($funcionario);
     }
 
     public function destroy($id)
     {
-        return response()->json(['message' => 'Funcionário removido com sucesso'], 200);
+        $funcionario = Funcionario::findOrFail($id);
+        $funcionario->delete();
+
+        return response()->noContent();
     }
 }

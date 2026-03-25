@@ -1,0 +1,17 @@
+meta {
+  name: Remover Empresa
+  type: http
+  seq: 4
+}
+
+delete {
+  url: {{baseUrl}}/api/empresas/{{empresaId}}
+  body: none
+  auth: none
+}
+
+tests {
+  test("Status deve ser 204", function() {
+    expect(res.status).to.equal(204);
+  });
+}

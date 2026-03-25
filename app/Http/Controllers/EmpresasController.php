@@ -4,55 +4,43 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\EmpresaResource;
+use App\Models\Empresa;
 use Illuminate\Http\Request;
 
 class EmpresasController extends Controller
 {
     public function index()
     {
-        return response()->json([
-            [
-                'id' => 1,
-                'nome' => 'Barbearia Estilo',
-                'descricao' => 'Cortes modernos e atendimento premium.',
-                'telefone' => '8533334444',
-                'email' => 'contato@estilo.com',
-                'endereco' => 'Rua das Flores, 123',
-                'capacidadeSimultanea' => 3,
-                'ativo' => true,
-                'criadoEm' => '2026-02-15 09:00:00',
-                'atualizadoEm' => '2026-02-15 09:00:00',
-            ],
-        ]);
+        return EmpresaResource::collection(Empresa::all());
     }
 
     public function store(Request $request)
     {
-        return response()->json([
-            'message' => 'Empresa criada com sucesso',
-            'data' => array_merge($request->all(), ['id' => 2]),
-        ], 201);
+        $validated = $request->validate(['nome' => 'required|string|max:255', 'cnpj' => 'nullable|string|max:18', 'endereco' => 'nullable|string|max:255', 'telefone' => 'nullable|string|max:20']);
+        $empresa = Empresa::create($validated);
+
+        return (new EmpresaResource($empresa))->response()->setStatusCode(201);
     }
 
     public function show($id)
     {
-        return response()->json([
-            'id' => (int) $id,
-            'nome' => 'Empresa Exemplo',
-            'email' => 'exemplo@empresa.com',
-        ]);
+        return new EmpresaResource(Empresa::findOrFail($id));
     }
 
     public function update(Request $request, $id)
     {
-        return response()->json([
-            'message' => 'Empresa atualizada com sucesso',
-            'data' => array_merge($request->all(), ['id' => (int) $id]),
-        ]);
+        $empresa = Empresa::findOrFail($id);
+        $empresa->update($request->all());
+
+        return new EmpresaResource($empresa);
     }
 
     public function destroy($id)
     {
-        return response()->json(['message' => 'Empresa removida com sucesso'], 200);
+        $empresa = Empresa::findOrFail($id);
+        $empresa->delete();
+
+        return response()->noContent();
     }
 }

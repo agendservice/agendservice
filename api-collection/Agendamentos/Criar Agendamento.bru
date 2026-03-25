@@ -1,0 +1,21 @@
+meta {
+  name: Criar Agendamento
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/agendamentos
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "cliente_id": 1,
+    "funcionario_id": 1,
+    "servico_id": 1,
+    "data_hora_inicio": "2026-04-01 10:00:00",
+    "observacao": "Primeira vez na barbearia."
+  }
+}

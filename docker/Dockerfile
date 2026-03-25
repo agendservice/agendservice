@@ -12,6 +12,9 @@ RUN apt-get update && apt-get install -y \
 
 RUN docker-php-ext-install pdo_mysql
 
+# Habilitar a cobertura de testes com pcov
+RUN pecl install pcov && docker-php-ext-enable pcov
+
 # --- INÍCIO DA SEÇÃO NOVA: INSTALAR NODE.JS E NPM ---
 
 # Adiciona o repositório oficial do NodeSource para obter a versão LTS (suporte de longo prazo)

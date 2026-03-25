@@ -14,7 +14,7 @@ composer_install:
 	cd docker && docker compose exec -T app bash -c "composer install"
 
 npm_install:
-	cd docker && docker compose exec -T node bash -c "npm install"
+	cd docker && docker compose exec -T app bash -c "npm install"
 
 env:
 	cd docker && docker compose exec -T app bash -c "cp .env.example .env"
@@ -33,3 +33,15 @@ style:
 
 test:
 	cd docker && docker compose exec -T app bash -c "php artisan test"
+
+coverage:
+	cd docker && docker compose exec -T app bash -c "./vendor/bin/phpunit --coverage-text"
+
+perm:
+	cd docker && docker compose exec -u root app chmod -R 777 storage bootstrap/cache
+
+seed:
+	cd docker && docker compose exec -T app bash -c "php artisan db:seed"
+
+cs-fixer:
+	cd docker && docker compose exec -T app bash -c "php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php -vvv"

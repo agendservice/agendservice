@@ -1,0 +1,17 @@
+meta {
+  name: Atualizar Usuario
+  type: http
+  seq: 4
+}
+
+put {
+  url: {{baseUrl}}/api/usuarios/1
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "nome": "Admin Principal"
+  }
+}

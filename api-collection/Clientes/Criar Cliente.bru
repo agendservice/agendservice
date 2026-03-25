@@ -1,0 +1,19 @@
+meta {
+  name: Criar Cliente
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/clientes
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "nome": "Maria Silva",
+    "email": "maria@cliente.com",
+    "telefone": "85977776666"
+  }
+}

@@ -3,7 +3,6 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 
 class UsuarioFactory extends Factory
 {
@@ -12,34 +11,24 @@ class UsuarioFactory extends Factory
         return [
             'nome' => $this->faker->name(),
             'email' => $this->faker->unique()->safeEmail(),
-            'cpf' => $this->faker->unique()->numerify('###########'),
-            'acesso_id' => 1,
-            'password' => bcrypt('password'), // Senha padrão para todos
-            'status' => 'pendente',
-            // 'tempo_atendimento' => '01:00:00',
-            // Adicione outros campos com valores padrão
-            'rg' => $this->faker->numerify('########'),
-            'endereco' => $this->faker->streetAddress(),
-            'cep' => $this->faker->postcode(),
-            'data_nascimento' => $this->faker->date(),
-            'nome_mae' => $this->faker->name('female'),
-            'profissao' => $this->faker->jobTitle(),
+            'password' => bcrypt('password'),
+            'telefone' => $this->faker->phoneNumber(),
+            'tipo' => 'cliente',
+            'status' => 'ativo',
         ];
-    }
-
-    // --- DEFININDO ESTADOS PARA TIPOS DE USUÁRIO ---
-    public function parceiro()
-    {
-        return $this->state(fn (array $attributes) => ['acesso_id' => 1]);
     }
 
     public function admin()
     {
-        return $this->state(fn (array $attributes) => ['acesso_id' => 2]);
+        return $this->state(fn (array $attributes) => [
+            'tipo' => 'admin',
+        ]);
     }
 
-    public function mentor()
+    public function funcionario()
     {
-        return $this->state(fn (array $attributes) => ['acesso_id' => 3]);
+        return $this->state(fn (array $attributes) => [
+            'tipo' => 'funcionario',
+        ]);
     }
 }

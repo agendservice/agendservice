@@ -1,0 +1,31 @@
+meta {
+  name: Criar Funcionario
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{baseUrl}}/api/funcionarios
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "empresa_id": {{empresaId}},
+    "nome": "Carlos Souza",
+    "especialidade": "Barbeiro Sênior"
+  }
+}
+
+script:post-response {
+  if (res.status === 201) {
+    bru.setVar("funcionarioId", res.body.data.id);
+  }
+}
+
+tests {
+  test("Status deve ser 201", function() {
+    expect(res.status).to.equal(201);
+  });
+}

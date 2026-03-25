@@ -1,0 +1,17 @@
+meta {
+  name: Remover Servico
+  type: http
+  seq: 4
+}
+
+delete {
+  url: {{baseUrl}}/api/servicos/{{servicoId}}
+  body: none
+  auth: none
+}
+
+tests {
+  test("Status deve ser 204", function() {
+    expect(res.status).to.equal(204);
+  });
+}

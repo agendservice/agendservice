@@ -4,81 +4,149 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Testing\Fluent\AssertableJson;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use App\Models\Usuario;
 
 class UsuariosControllerTest extends TestCase
 {
-    /**
-     * Teste para verificar se a listagem de usuários retorna os tipos corretos
-     */
+    use RefreshDatabase;
+
     public function test_pode_listar_usuarios_com_tipos_corretos()
     {
+        Usuario::factory()->create();
+
         $response = $this->getJson('/api/usuarios');
 
         $response->assertStatus(200)
-                    ->assertJson(fn (AssertableJson $json) =>
-                        $json->each(fn (AssertableJson $json) =>
-                            $json->whereType('id', 'integer')
-                                ->whereType('nome', 'string')
-                                ->whereType('email', 'string')
-                                ->whereType('telefone', 'string|integer|null')
-                                ->whereType('status', 'string')
-                                ->etc()
-                        )
-                    );
+            ->assertJson(fn (AssertableJson $json) =>
+                $json->has('data')
+                    ->has('data.0', fn (AssertableJson $json) =>
+                        $json->whereAllType([
+                            'id' => 'integer',
+                            'nome' => 'string',
+                            'email' => 'string'
+                        ])->etc()
+                    )
+            );
     }
 
     public function test_pode_criar_usuario()
     {
-        $payload = ['nome' => 'Novo Usuário', 'email' => 'usuarioteste18@email.com', 'password' => 'senha1234', 'telefone' => '123456789', 'status' => 'ativo'];
+        $payload = [
+            'nome' => 'Novo Usuário', 
+            'email' => 'usuarioteste@email.com', 
+            'password' => 'senha1234'
+        ];
         $response = $this->postJson('/api/usuarios', $payload);
         
         $response->assertStatus(201)
                  ->assertJson(fn (AssertableJson $json) =>
-                    $json->has('message')
-                         ->has('data', fn (AssertableJson $json) =>
-                            $json->whereType('nome', 'string')
-                                 ->etc()
-                         )
+                    $json->has('data', fn (AssertableJson $json) =>
+                        $json->where('nome', 'Novo Usuário')
+                             ->etc()
+                    )
                  );
-        
-        return $response->json('data.id');
+
+        $this->assertDatabaseHas('usuarios', [
+            'nome' => 'Novo Usuário',
+            'email' => 'usuarioteste@email.com',
+        ]);
     }
 
-    /**
-     * @depends test_pode_criar_usuario
-     */
-    public function test_pode_ver_usuario($usuarioId)
+    public function test_pode_ver_usuario()
     {
-        $response = $this->getJson("/api/usuarios/{$usuarioId}");
+        $usuario = Usuario::factory()->create();
+        $response = $this->getJson("/api/usuarios/{$usuario->id}");
         $response->assertStatus(200)
                  ->assertJson(fn (AssertableJson $json) =>
-                    $json->whereType('id', 'integer')
-                         ->whereType('nome', 'string')
-                         ->etc()
+                    $json->has('data', fn (AssertableJson $json) =>
+                        $json->where('id', $usuario->id)
+                             ->etc()
+                    )
                  );
-        
-        return $usuarioId;
     }
 
-    /**
-     * @depends test_pode_ver_usuario
-     */
-    public function test_pode_atualizar_usuario($usuarioId)
+    public function test_pode_atualizar_usuario()
     {
+        $usuario = Usuario::factory()->create();
         $payload = ['nome' => 'Nome Atualizado'];
-        $response = $this->putJson("/api/usuarios/{$usuarioId}", $payload);
+        $response = $this->putJson("/api/usuarios/{$usuario->id}", $payload);
         $response->assertStatus(200)
                  ->assertJsonPath('data.nome', 'Nome Atualizado');
-        
-        return $usuarioId;
+
+        $this->assertDatabaseHas('usuarios', [
+            'id' => $usuario->id,
+            'nome' => 'Nome Atualizado',
+        ]);
     }
 
-    /**
-     * @depends test_pode_atualizar_usuario
-     */
-    public function test_pode_remover_usuario($usuarioId)
+    public function test_pode_remover_usuario()
     {
-        $response = $this->deleteJson("/api/usuarios/{$usuarioId}");
-        $response->assertStatus(200);
+        $usuario = Usuario::factory()->create();
+        $response = $this->deleteJson("/api/usuarios/{$usuario->id}");
+        $response->assertStatus(204);
+
+        $this->assertDatabaseMissing('usuarios', ['id' => $usuario->id]);
+    }
+
+    public function test_nao_pode_criar_usuario_sem_senha()
+    {
+        $payload = [
+            'nome' => 'Novo Usuário',
+            'email' => 'usuarioteste@email.com',
+        ];
+
+        $response = $this->postJson('/api/usuarios', $payload);
+
+        $response->assertStatus(422)
+                 ->assertJsonValidationErrors(['password']);
+    }
+
+    public function test_nao_pode_criar_usuario_com_email_duplicado()
+    {
+        Usuario::factory()->create(['email' => 'duplicado@email.com']);
+
+        $payload = [
+            'nome' => 'Novo Usuário',
+            'email' => 'duplicado@email.com',
+            'password' => 'senha1234',
+        ];
+
+        $response = $this->postJson('/api/usuarios', $payload);
+
+        $response->assertStatus(422)
+                 ->assertJsonValidationErrors(['email']);
+    }
+
+    public function test_nao_pode_atualizar_usuario_com_email_duplicado()
+    {
+        $usuario1 = Usuario::factory()->create(['email' => 'usuario1@email.com']);
+        $usuario2 = Usuario::factory()->create(['email' => 'usuario2@email.com']);
+
+        $response = $this->putJson("/api/usuarios/{$usuario2->id}", ['email' => $usuario1->email]);
+
+        $response->assertStatus(422)
+                 ->assertJsonValidationErrors(['email']);
+    }
+
+    public function test_nao_pode_ver_usuario_inexistente()
+    {
+        $response = $this->getJson('/api/usuarios/999999');
+
+        $response->assertStatus(404);
+    }
+
+    public function test_nao_pode_atualizar_usuario_inexistente()
+    {
+        $response = $this->putJson('/api/usuarios/999999', ['nome' => 'Nome Atualizado']);
+
+        $response->assertStatus(404);
+    }
+
+    public function test_nao_pode_remover_usuario_inexistente()
+    {
+        $response = $this->deleteJson('/api/usuarios/999999');
+
+        $response->assertStatus(404);
     }
 }

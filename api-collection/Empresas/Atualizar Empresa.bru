@@ -1,0 +1,23 @@
+meta {
+  name: Atualizar Empresa
+  type: http
+  seq: 2
+}
+
+put {
+  url: {{baseUrl}}/api/empresas/{{empresaId}}
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "nome": "Barbearia Estilo Editada"
+  }
+}
+
+tests {
+  test("Status deve ser 200", function() {
+    expect(res.status).to.equal(200);
+  });
+}
