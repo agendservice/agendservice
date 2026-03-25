@@ -18,8 +18,11 @@ class UsuariosController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate(['nome' => 'required|string|max:255', 'email' => 'required|string|email|max:255|unique:usuarios', 'password' => 'required|string|min:8', 'telefone' => 'nullable|string|max:20', 'tipo' => 'string|in:admin,funcionario,cliente', 'status' => 'string|in:ativo,inativo']);
-        if (isset($validated['password'])) { $validated['password'] = bcrypt($validated['password']); }
+        if (isset($validated['password'])) {
+            $validated['password'] = bcrypt($validated['password']);
+        }
         $usuario = Usuario::create($validated);
+
         return (new UsuarioResource($usuario))->response()->setStatusCode(201);
     }
 
@@ -32,8 +35,11 @@ class UsuariosController extends Controller
     {
         $usuario = Usuario::findOrFail($id);
         $validated = $request->validate(['nome' => 'string|max:255', 'email' => 'string|email|max:255|unique:usuarios,email,'.$usuario->id, 'password' => 'string|min:8', 'telefone' => 'nullable|string|max:20', 'tipo' => 'string|in:admin,funcionario,cliente', 'status' => 'string|in:ativo,inativo']);
-        if (isset($validated['password'])) { $validated['password'] = bcrypt($validated['password']); }
+        if (isset($validated['password'])) {
+            $validated['password'] = bcrypt($validated['password']);
+        }
         $usuario->update($validated);
+
         return new UsuarioResource($usuario);
     }
 
@@ -41,6 +47,7 @@ class UsuariosController extends Controller
     {
         $usuario = Usuario::findOrFail($id);
         $usuario->delete();
+
         return response()->noContent();
     }
 }

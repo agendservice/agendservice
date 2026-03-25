@@ -19,6 +19,7 @@ class EmpresasController extends Controller
     {
         $validated = $request->validate(['nome' => 'required|string|max:255', 'cnpj' => 'nullable|string|max:18', 'endereco' => 'nullable|string|max:255', 'telefone' => 'nullable|string|max:20']);
         $empresa = Empresa::create($validated);
+
         return (new EmpresaResource($empresa))->response()->setStatusCode(201);
     }
 
@@ -31,6 +32,7 @@ class EmpresasController extends Controller
     {
         $empresa = Empresa::findOrFail($id);
         $empresa->update($request->all());
+
         return new EmpresaResource($empresa);
     }
 
@@ -38,6 +40,7 @@ class EmpresasController extends Controller
     {
         $empresa = Empresa::findOrFail($id);
         $empresa->delete();
+
         return response()->noContent();
     }
 }

@@ -24,6 +24,7 @@ class FuncionariosController extends Controller
             'especialidade' => 'nullable|string|max:255',
         ]);
         $funcionario = Funcionario::create($validated);
+
         return (new FuncionarioResource($funcionario))->response()->setStatusCode(201);
     }
 
@@ -36,6 +37,7 @@ class FuncionariosController extends Controller
     {
         $funcionario = Funcionario::findOrFail($id);
         $funcionario->update($request->all());
+
         return new FuncionarioResource($funcionario);
     }
 
@@ -43,6 +45,7 @@ class FuncionariosController extends Controller
     {
         $funcionario = Funcionario::findOrFail($id);
         $funcionario->delete();
+
         return response()->noContent();
     }
 }

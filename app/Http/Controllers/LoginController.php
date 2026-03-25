@@ -7,7 +7,6 @@ namespace App\Http\Controllers;
 use App\Models\Usuario;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\ValidationException;
 
 class LoginController extends Controller
 {
@@ -20,12 +19,12 @@ class LoginController extends Controller
 
         $usuario = Usuario::where('email', $request->email)->first();
 
-        if (! $usuario || ! Hash::check($request->password, $usuario->password)) {
+        if (!$usuario || !Hash::check($request->password, $usuario->password)) {
             return response()->json([
                 'message' => 'As credenciais fornecidas estão incorretas.',
                 'errors' => [
                     'email' => ['As credenciais fornecidas estão incorretas.'],
-                ]
+                ],
             ], 422);
         }
 

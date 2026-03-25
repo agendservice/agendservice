@@ -32,7 +32,7 @@ class AgendamentosController extends Controller
         $fim = $inicio->copy()->addMinutes($servico->duracao_minutos);
 
         $sobreposicao = Agendamento::where('funcionario_id', $validated['funcionario_id'])
-            ->where(function ($query) use ($inicio, $fim) {
+            ->where(static function ($query) use ($inicio, $fim) {
                 $query->whereBetween('data_hora_inicio', [$inicio, $fim->copy()->subSecond()])
                     ->orWhereBetween('data_hora_fim', [$inicio->copy()->addSecond(), $fim]);
             })->exists();
@@ -57,6 +57,7 @@ class AgendamentosController extends Controller
     {
         $agendamento = Agendamento::findOrFail($id);
         $agendamento->update($request->all());
+
         return new AgendamentoResource($agendamento->load(['cliente', 'funcionario', 'servico']));
     }
 
@@ -64,6 +65,7 @@ class AgendamentosController extends Controller
     {
         $agendamento = Agendamento::findOrFail($id);
         $agendamento->delete();
+
         return response()->noContent();
     }
 }

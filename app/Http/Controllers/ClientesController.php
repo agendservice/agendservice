@@ -24,6 +24,7 @@ class ClientesController extends Controller
             'telefone' => 'nullable|string|max:20',
         ]);
         $cliente = Cliente::create($validated);
+
         return (new ClienteResource($cliente))->response()->setStatusCode(201);
     }
 
@@ -36,6 +37,7 @@ class ClientesController extends Controller
     {
         $cliente = Cliente::findOrFail($id);
         $cliente->update($request->all());
+
         return new ClienteResource($cliente);
     }
 
@@ -43,6 +45,7 @@ class ClientesController extends Controller
     {
         $cliente = Cliente::findOrFail($id);
         $cliente->delete();
+
         return response()->noContent();
     }
 
@@ -50,6 +53,7 @@ class ClientesController extends Controller
     {
         $cliente = Cliente::findOrFail($id);
         $agendamentos = \App\Models\Agendamento::where('cliente_id', $id)->with(['servico', 'funcionario.empresa'])->get();
+
         return \App\Http\Resources\AgendamentoResource::collection($agendamentos);
     }
 }

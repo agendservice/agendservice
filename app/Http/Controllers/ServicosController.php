@@ -25,6 +25,7 @@ class ServicosController extends Controller
             'preco' => 'required|numeric|min:0',
         ]);
         $servico = Servico::create($validated);
+
         return (new ServicoResource($servico))->response()->setStatusCode(201);
     }
 
@@ -37,6 +38,7 @@ class ServicosController extends Controller
     {
         $servico = Servico::findOrFail($id);
         $servico->update($request->all());
+
         return new ServicoResource($servico);
     }
 
@@ -44,6 +46,7 @@ class ServicosController extends Controller
     {
         $servico = Servico::findOrFail($id);
         $servico->delete();
+
         return response()->noContent();
     }
 }

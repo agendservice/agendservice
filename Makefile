@@ -42,3 +42,6 @@ perm:
 
 seed:
 	cd docker && docker compose exec -T app bash -c "php artisan db:seed"
+
+cs-fixer:
+	cd docker && docker compose exec -T app bash -c "php vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php -vvv"
