@@ -1,0 +1,21 @@
+meta {
+  name: Listar Empresas
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseUrl}}/api/empresas
+  body: none
+  auth: none
+}
+
+tests {
+  test("Status deve ser 200", function() {
+    expect(res.status).to.equal(200);
+  });
+  
+  test("Deve retornar uma lista (array)", function() {
+    expect(res.body.data).to.be.a('array');
+  });
+}

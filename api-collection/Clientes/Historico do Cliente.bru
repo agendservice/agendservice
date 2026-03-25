@@ -1,0 +1,17 @@
+meta {
+  name: Historico do Cliente
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{baseUrl}}/api/clientes/1/historico
+  body: none
+  auth: none
+}
+
+tests {
+  test("Status deve ser 200", function() {
+    expect(res.status).to.equal(200);
+  });
+}
