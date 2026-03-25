@@ -4,70 +4,72 @@ namespace Tests\Feature;
 
 use Tests\TestCase;
 use Illuminate\Testing\Fluent\AssertableJson;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use App\Models\Servico;
+use App\Models\Empresa;
 
 class ServicosControllerTest extends TestCase
 {
+    use RefreshDatabase;
+
     public function test_pode_listar_servicos_com_tipos_corretos()
     {
+        Servico::factory()->create();
+
         $response = $this->getJson('/api/servicos');
 
         $response->assertStatus(200)
             ->assertJson(fn (AssertableJson $json) =>
-                $json->each(fn (AssertableJson $json) =>
+                $json->has('data', 1, fn (AssertableJson $json) =>
                     $json->whereAllType([
                         'id' => 'integer',
+                        'empresa_id' => 'integer',
                         'nome' => 'string',
-                        'descricao' => 'string',
-                        'duracaoMinutos' => 'integer',
-                        'preco' => 'double|integer',
-                        'intervaloMinimoDias' => 'integer',
-                        'empresa' => 'array',
-                        'ativo' => 'boolean',
-                        'criadoEm' => 'string',
-                        'atualizadoEm' => 'string'
-                    ])
+                        'descricao' => 'string|null',
+                        'duracao_minutos' => 'integer',
+                        'preco' => 'double|integer|string',
+                        'criado_em' => 'string',
+                        'atualizado_em' => 'string'
+                    ])->etc()
                 )
             );
     }
 
     public function test_pode_criar_servico()
     {
-        $payload = ['nome' => 'Novo Serviço', 'preco' => 100.00];
+        $empresa = Empresa::factory()->create();
+        $payload = [
+            'empresa_id' => $empresa->id,
+            'nome' => 'Novo Serviço',
+            'duracao_minutos' => 45,
+            'preco' => 100.00
+        ];
         $response = $this->postJson('/api/servicos', $payload);
         $response->assertStatus(201)
-                 ->assertJson(fn (AssertableJson $json) =>
-                    $json->has('message')
-                         ->has('data', fn (AssertableJson $json) =>
-                            $json->whereType('id', 'integer')
-                                 ->whereType('nome', 'string')
-                                 ->etc()
-                         )
-                 );
+                 ->assertJsonPath('data.nome', 'Novo Serviço');
     }
 
     public function test_pode_ver_servico()
     {
-        $response = $this->getJson('/api/servicos/1');
+        $servico = Servico::factory()->create();
+        $response = $this->getJson("/api/servicos/{$servico->id}");
         $response->assertStatus(200)
-                 ->assertJson(fn (AssertableJson $json) =>
-                    $json->whereType('id', 'integer')
-                         ->whereType('nome', 'string')
-                         ->whereType('preco', 'double|integer')
-                         ->etc()
-                 );
+                 ->assertJsonPath('data.id', $servico->id);
     }
 
     public function test_pode_atualizar_servico()
     {
+        $servico = Servico::factory()->create();
         $payload = ['nome' => 'Serviço Atualizado'];
-        $response = $this->putJson('/api/servicos/1', $payload);
+        $response = $this->putJson("/api/servicos/{$servico->id}", $payload);
         $response->assertStatus(200)
                  ->assertJsonPath('data.nome', 'Serviço Atualizado');
     }
 
     public function test_pode_remover_servico()
     {
-        $response = $this->deleteJson('/api/servicos/1');
-        $response->assertStatus(200);
+        $servico = Servico::factory()->create();
+        $response = $this->deleteJson("/api/servicos/{$servico->id}");
+        $response->assertStatus(204);
     }
 }

@@ -17,11 +17,11 @@ use App\Services\AcessoService;
 | contains the "web" middleware group. Now create something great!
 |
 */
-use App\Http\Controllers\FaturasController;
-Route::controller(FaturasController::class)->group(function () {
-    Route::middleware('auth')->post('/fatura/gerar', 'gerarFatura');
-    Route::middleware('auth')->get('/fatura/status/{referencia}', 'status');
-});
+// use App\Http\Controllers\FaturasController;
+// Route::controller(FaturasController::class)->group(function () {
+//     Route::middleware('auth')->post('/fatura/gerar', 'gerarFatura');
+//     Route::middleware('auth')->get('/fatura/status/{referencia}', 'status');
+// });
 
 Route::get('/', function () {
     if (\Auth::check()) {

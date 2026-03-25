@@ -4,73 +4,46 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ServicoResource;
+use App\Models\Servico;
 use Illuminate\Http\Request;
 
 class ServicosController extends Controller
 {
     public function index()
     {
-        return response()->json([
-            [
-                'id' => 1,
-                'nome' => 'Corte de Cabelo',
-                'descricao' => 'Corte tradicional ou degradê.',
-                'duracaoMinutos' => 40,
-                'preco' => 35.00,
-                'intervaloMinimoDias' => 0,
-                'empresa' => [
-                    'id' => 1,
-                    'nome' => 'Barbearia Estilo',
-                ],
-                'ativo' => true,
-                'criadoEm' => '2026-02-15 09:30:00',
-                'atualizadoEm' => '2026-02-15 09:30:00',
-            ],
-            [
-                'id' => 2,
-                'nome' => 'Tratamento Capilar',
-                'descricao' => 'Hidratação profunda com produtos profissionais.',
-                'duracaoMinutos' => 60,
-                'preco' => 80.00,
-                'intervaloMinimoDias' => 30,
-                'empresa' => [
-                    'id' => 1,
-                    'nome' => 'Barbearia Estilo',
-                ],
-                'ativo' => true,
-                'criadoEm' => '2026-02-15 10:00:00',
-                'atualizadoEm' => '2026-02-15 10:00:00',
-            ],
-        ]);
+        return ServicoResource::collection(Servico::with('empresa')->get());
     }
 
     public function store(Request $request)
     {
-        return response()->json([
-            'message' => 'Serviço criado com sucesso',
-            'data' => array_merge($request->all(), ['id' => 3]),
-        ], 201);
+        $validated = $request->validate([
+            'empresa_id' => 'required|exists:empresas,id',
+            'nome' => 'required|string|max:255',
+            'descricao' => 'nullable|string',
+            'duracao_minutos' => 'required|integer|min:1',
+            'preco' => 'required|numeric|min:0',
+        ]);
+        $servico = Servico::create($validated);
+        return (new ServicoResource($servico))->response()->setStatusCode(201);
     }
 
     public function show($id)
     {
-        return response()->json([
-            'id' => (int) $id,
-            'nome' => 'Serviço Exemplo',
-            'preco' => 50.00,
-        ]);
+        return new ServicoResource(Servico::with('empresa')->findOrFail($id));
     }
 
     public function update(Request $request, $id)
     {
-        return response()->json([
-            'message' => 'Serviço atualizado com sucesso',
-            'data' => array_merge($request->all(), ['id' => (int) $id]),
-        ]);
+        $servico = Servico::findOrFail($id);
+        $servico->update($request->all());
+        return new ServicoResource($servico);
     }
 
     public function destroy($id)
     {
-        return response()->json(['message' => 'Serviço removido com sucesso'], 200);
+        $servico = Servico::findOrFail($id);
+        $servico->delete();
+        return response()->noContent();
     }
 }
