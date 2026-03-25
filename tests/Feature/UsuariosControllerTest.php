@@ -6,6 +6,7 @@ use Tests\TestCase;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Models\Usuario;
+use Illuminate\Support\Facades\Hash;
 
 class UsuariosControllerTest extends TestCase
 {
@@ -78,6 +79,19 @@ class UsuariosControllerTest extends TestCase
             'id' => $usuario->id,
             'nome' => 'Nome Atualizado',
         ]);
+    }
+
+    public function test_pode_atualizar_senha_do_usuario()
+    {
+        $usuario = Usuario::factory()->create();
+
+        $payload = ['password' => 'novaSenha1234'];
+        $response = $this->putJson("/api/usuarios/{$usuario->id}", $payload);
+
+        $response->assertStatus(200);
+
+        $usuarioAtualizado = Usuario::findOrFail($usuario->id);
+        $this->assertTrue(Hash::check('novaSenha1234', $usuarioAtualizado->password));
     }
 
     public function test_pode_remover_usuario()
