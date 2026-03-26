@@ -1,6 +1,6 @@
 # AgendService - Plataforma de Agendamentos
 
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE.md)
+[![codecov](https://codecov.io/gh/agendservice/agendservice/graph/badge.svg)](https://codecov.io/gh/agendservice/agendservice)
 
 O **AgendService** é um sistema robusto para gestão de agendamentos de serviços, permitindo o controle de empresas, prestadores (funcionários), serviços e clientes.
 
