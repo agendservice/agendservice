@@ -78,21 +78,16 @@
 </template>
 
 <script setup>
-import axios from 'axios';
-import FilterButton from './mosaic/base/DropdownFilter.vue';
-import Datepicker from './Datepicker.vue';
-import Header from './PageHeader.vue';
 import Menu from './Menu.vue';
 import Botao from './mosaic/Botao.vue';
 import Modal from './mosaic/Modal.vue';
 import Icone from './mosaic/Icone.vue';
 import UserMenu from './mosaic/base/DropdownProfile.vue'
 import ThemeToggle from './mosaic/base/ThemeToggle.vue'
-import ModalPagamento from './ModalPagamento.vue';
-import { ref, computed, onMounted, onUnmounted } from 'vue';
+import { ref } from 'vue';
 
 // CORREÇÃO 2: Declarar os eventos que o componente pode emitir
-const emit = defineEmits([
+defineEmits([
   'submit:buscar', 
   'submit:limpar', 
   'submit:cadastrar', 
@@ -100,7 +95,7 @@ const emit = defineEmits([
 ]);
 
 // --- Props ---
-const props = defineProps({
+defineProps({
   exibirFiltros: { type: Boolean, default: true },
   exibirCadastro: { type: Boolean, default: true },
   exibirTitulo: { type: Boolean, default: true },
@@ -125,28 +120,6 @@ const toggleSidebar = () => {
 const exibirFormulario = ref(false);
 const exibirRemover = ref(false);
 const modalFiltros = ref(false);
-const usuarioLogado = ref({});
-
-// --- State Pagamento ---
-const exibirModal = ref(false);
-
-// --- Computed ---
-const statusAssinatura = 'vencida'; // Substitua pela lógica real para obter o status da assinatura
-const isAdmin = computed(() => usuarioLogado.value.acesso_id === 2);
-
-// --- Lifecycle ---
-onMounted(() => {
-});
-
-onUnmounted(() => {
-  if (pollingInterval) clearInterval(pollingInterval);
-});
-
-
-// --- Métodos de Pagamento ---
-const abrirModalPagamento = () => {
-    exibirModal.value = true
-};
 
 // --- Expor propriedades para o template ref ---
 defineExpose({

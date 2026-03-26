@@ -7,12 +7,37 @@ namespace App\Http\Controllers;
 use App\Http\Resources\EmpresaResource;
 use App\Models\Empresa;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class EmpresasController extends Controller
 {
     public function index()
     {
         return EmpresaResource::collection(Empresa::all());
+    }
+
+    public function buscar(Request $request): AnonymousResourceCollection
+    {
+        $perPage = $request->input('per_page', 10);
+        $page = $request->input('page', 1);
+
+        $query = Empresa::query();
+
+        if ($request->filled('nome')) {
+            $query->where('nome', 'like', '%' . $request->nome . '%');
+        }
+
+        if ($request->filled('cnpj')) {
+            $query->where('cnpj', 'like', '%' . $request->cnpj . '%');
+        }
+
+        if ($request->filled('email')) {
+            $query->where('email', 'like', '%' . $request->email . '%');
+        }
+
+        $empresas = $query->paginate($perPage, ['*'], 'page', $page);
+
+        return EmpresaResource::collection($empresas);
     }
 
     public function store(Request $request)
@@ -28,8 +53,9 @@ class EmpresasController extends Controller
         return new EmpresaResource(Empresa::findOrFail($id));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, $id = null)
     {
+        $id = $id ?? $request->input('id');
         $empresa = Empresa::findOrFail($id);
         $empresa->update($request->all());
 
