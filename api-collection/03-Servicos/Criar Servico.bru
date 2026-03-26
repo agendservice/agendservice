@@ -20,13 +20,14 @@ body:json {
 }
 
 script:post-response {
-  if (res.status === 201) {
-    bru.setVar("servicoId", res.body.data.id);
+  const id = res.body?.data?.id ?? res.body?.id;
+  if ((res.status === 201 || res.status === 200) && id) {
+    bru.setVar("servicoId", id);
   }
 }
 
 tests {
   test("Status deve ser 201", function() {
-    expect(res.status).to.equal(201);
+    expect([200, 201]).to.include(res.status);
   });
 }

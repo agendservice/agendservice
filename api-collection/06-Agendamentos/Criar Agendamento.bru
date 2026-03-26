@@ -1,0 +1,34 @@
+meta {
+  name: Criar Agendamento
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/agendamentos
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "cliente_id": {{clienteId}},
+    "funcionario_id": {{funcionarioId}},
+    "servico_id": {{servicoId}},
+    "data_hora_inicio": "2026-04-01 10:00:00",
+    "observacao": "Primeira vez na barbearia."
+  }
+}
+
+script:post-response {
+  const id = res.body?.data?.id ?? res.body?.id;
+  if ((res.status === 201 || res.status === 200) && id) {
+    bru.setVar("agendamentoId", id);
+  }
+}
+
+tests {
+  test("Status deve ser 201", function() {
+    expect([200, 201]).to.include(res.status);
+  });
+}

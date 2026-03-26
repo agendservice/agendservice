@@ -1,0 +1,17 @@
+meta {
+  name: Remover Cliente
+  type: http
+  seq: 3
+}
+
+delete {
+  url: {{baseUrl}}/api/clientes/{{clienteId}}
+  body: none
+  auth: none
+}
+
+tests {
+  test("Status deve ser 204", function() {
+    expect([200, 204]).to.include(res.status);
+  });
+}

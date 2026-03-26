@@ -1,0 +1,40 @@
+meta {
+  name: Criar Usuario
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{baseUrl}}/api/usuarios
+  body: json
+  auth: none
+}
+
+script:pre-request {
+  const email = `admin+${Date.now()}@agendservice.com`;
+  const password = "password123";
+  bru.setVar("usuarioEmail", email);
+  bru.setVar("loginEmail", email);
+  bru.setVar("loginPassword", password);
+}
+
+body:json {
+  {
+    "nome": "Admin Novo",
+    "email": "{{usuarioEmail}}",
+    "password": "password123"
+  }
+}
+
+script:post-response {
+  const id = res.body?.data?.id ?? res.body?.id;
+  if ((res.status === 201 || res.status === 200) && id) {
+    bru.setVar("usuarioId", id);
+  }
+}
+
+tests {
+  test("Status deve ser 201", function() {
+    expect([200, 201]).to.include(res.status);
+  });
+}

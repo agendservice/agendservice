@@ -1,0 +1,17 @@
+meta {
+  name: Remover Usuario
+  type: http
+  seq: 5
+}
+
+delete {
+  url: {{baseUrl}}/api/usuarios/{{usuarioId}}
+  body: none
+  auth: none
+}
+
+tests {
+  test("Status deve ser 204", function() {
+    expect([200, 204]).to.include(res.status);
+  });
+}

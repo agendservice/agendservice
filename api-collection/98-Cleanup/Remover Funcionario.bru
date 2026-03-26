@@ -1,0 +1,17 @@
+meta {
+  name: Remover Funcionario
+  type: http
+  seq: 2
+}
+
+delete {
+  url: {{baseUrl}}/api/funcionarios/{{funcionarioId}}
+  body: none
+  auth: none
+}
+
+tests {
+  test("Status deve ser 204", function() {
+    expect([200, 204]).to.include(res.status);
+  });
+}

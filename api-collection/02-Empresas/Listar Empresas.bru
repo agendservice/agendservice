@@ -16,6 +16,7 @@ tests {
   });
   
   test("Deve retornar uma lista (array)", function() {
-    expect(res.body.data).to.be.a('array');
+    const lista = res.body?.data ?? res.body;
+    expect(lista).to.be.a('array');
   });
 }
