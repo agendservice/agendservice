@@ -7,11 +7,19 @@ namespace App\Http\Controllers;
 use App\Http\Resources\AgendamentoResource;
 use App\Models\Agendamento;
 use App\Models\Servico;
+use App\Services\AgendamentoIntervalosRepository;
+use App\Services\AgendamentoService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class AgendamentosController extends Controller
 {
+    public function __construct(
+        private readonly AgendamentoIntervalosRepository $agendamentoIntervalosRepository,
+        private readonly AgendamentoService $agendamentoService,
+    ) {
+    }
+
     public function index()
     {
         return AgendamentoResource::collection(Agendamento::with(['cliente', 'funcionario', 'servico'])->get());
@@ -29,13 +37,10 @@ class AgendamentosController extends Controller
 
         $servico = Servico::findOrFail($validated['servico_id']);
         $inicio = Carbon::parse($validated['data_hora_inicio']);
-        $fim = $inicio->copy()->addMinutes($servico->duracao_minutos);
+        $fim = Carbon::instance($this->agendamentoService->calcularFim($inicio, (int) $servico->duracao_minutos));
 
-        $sobreposicao = Agendamento::where('funcionario_id', $validated['funcionario_id'])
-            ->where(static function ($query) use ($inicio, $fim) {
-                $query->whereBetween('data_hora_inicio', [$inicio, $fim->copy()->subSecond()])
-                    ->orWhereBetween('data_hora_fim', [$inicio->copy()->addSecond(), $fim]);
-            })->exists();
+        $intervalos = $this->agendamentoIntervalosRepository->listarDoFuncionarioNoDia((int) $validated['funcionario_id'], $inicio);
+        $sobreposicao = $this->agendamentoService->existeSobreposicao($inicio, $fim, $intervalos);
 
         if ($sobreposicao) {
             return response()->json(['message' => 'O funcionário já possui um agendamento neste horário.'], 422);
