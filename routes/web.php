@@ -1,11 +1,13 @@
 <?php
 
+use App\Http\Controllers\AgendamentosController;
+use App\Http\Controllers\ClientesController;
+use App\Http\Controllers\EmpresasController;
+use App\Http\Controllers\FuncionariosController;
+use App\Http\Controllers\ServicosController;
+use App\Http\Controllers\UsuariosController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Http\Request; 
-use App\Models\Usuario;
-use App\Models\Empresa;
-
-use App\Services\AcessoService;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,70 +26,73 @@ use App\Services\AcessoService;
 // });
 
 Route::get('/', function () {
-    if (\Auth::check()) {
-        // Redireciona usuário logado para o dashboard apropriado
-        $user = \Auth::user();
-        if ($user->acesso_id == 2) {
-            // Admin - redireciona para dashboard admin
-            return redirect('/dashboard/admin');
-        } else {
-            // Parceiro - redireciona para dashboard padrão
-            return redirect('/dashboard/default');
-        }
-    } else {
-        return view('login');
+    if (Auth::check()) {
+        return redirect('/dashboard');
     }
+
+    return view('login');
 })->name('home');
 
-Use App\Http\Controllers\UsuarioController;
-Route::controller(UsuarioController::class)->group(function () {
+Route::controller(UsuariosController::class)->group(function () {
     Route::post('/login', 'login');
+
     Route::middleware('auth')->group(function () {
-        Route::post('/usuario', 'index');
+        Route::post('/usuario', 'buscar');
         Route::get('/usuario/{id}', 'show');
         Route::post('/menu', 'menu');
         Route::post('/usuario/cadastrar', 'store');
         Route::put('/usuario/atualizar', 'update');
+        Route::delete('/usuario/{id}', 'destroy');
         Route::post('/logout', 'logout');
     });
 });
 
+Route::middleware('auth')->group(function () {
+    Route::controller(EmpresasController::class)->group(function () {
+        Route::post('/empresa', 'buscar');
+        Route::get('/empresa/{id}', 'show');
+        Route::post('/empresa/cadastrar', 'store');
+        Route::put('/empresa/atualizar', 'update');
+        Route::delete('/empresa/{id}', 'destroy');
+    });
+
+    Route::controller(ServicosController::class)->group(function () {
+        Route::post('/servico', 'buscar');
+        Route::get('/servico/{id}', 'show');
+        Route::post('/servico/cadastrar', 'store');
+        Route::put('/servico/atualizar', 'update');
+        Route::delete('/servico/{id}', 'destroy');
+    });
+
+    Route::controller(FuncionariosController::class)->group(function () {
+        Route::post('/funcionario', 'buscar');
+        Route::get('/funcionario/{id}', 'show');
+        Route::post('/funcionario/cadastrar', 'store');
+        Route::put('/funcionario/atualizar', 'update');
+        Route::delete('/funcionario/{id}', 'destroy');
+    });
+
+    Route::controller(ClientesController::class)->group(function () {
+        Route::post('/cliente', 'buscar');
+        Route::get('/cliente/{id}', 'show');
+        Route::post('/cliente/cadastrar', 'store');
+        Route::put('/cliente/atualizar', 'update');
+        Route::delete('/cliente/{id}', 'destroy');
+    });
+
+    Route::controller(AgendamentosController::class)->group(function () {
+        Route::post('/agendamento', 'buscar');
+        Route::get('/agendamento/{id}', 'show');
+        Route::post('/agendamento/cadastrar', 'store');
+        Route::put('/agendamento/atualizar', 'update');
+        Route::delete('/agendamento/{id}', 'destroy');
+    });
+});
+
 Route::get('/{any}', function ($any) {
-    if (\Auth::check()) {
-        $user = \Auth::user();
-        
-        // Lista de rotas que requerem acesso de admin
-        $rotasAdmin = [
-            'dashboard/admin', 'usuarios', 'vendas', 'contabilidade', 
-            'metas', 'clientes', 'treinamentos', 'campanhas', 
-            'cadastro', 'acessos', 'parametros', 'regras'
-        ];
-        
-        $rotaLimpa = explode('/', $any)[0];
-        if (count(explode('/', $any)) > 1) {
-            $rotaLimpa = explode('/', $any)[0] . '/' . explode('/', $any)[1];
-        }
-        
-        if ((in_array($rotaLimpa, $rotasAdmin) || in_array($any, $rotasAdmin)) && $user->acesso_id != 2) {
-            return redirect('/dashboard/default')->with('error', 'Acesso negado para esta funcionalidade.');
-        }
-        
-        return view('app');
-    } else {
-        $rotasPublicas = ['registro', 'registro-cliente', 'redefinir-senha'];
-        foreach ($rotasPublicas as $rota) {
-             if ($any === $rota || str_starts_with($any, $rota . '/')) {
-                 return view('app');
-             }
-        }
-        
-        $slugEmpresa = explode('/', $any)[0];
-
-        $empresa = Empresa::where('slug_empresa', $slugEmpresa)->first();
-        if ($empresa) {
-            return view('app');;
-        }
-
+    if (!Auth::check()) {
         return redirect('/');
     }
+
+    return view('app');
 })->where('any', '.*');

@@ -3,9 +3,13 @@ import { createRouter, createWebHistory } from 'vue-router'
 const routerHistory = createWebHistory()
 
 import Login from './views/Login.vue';
-import ResetSenha from './views/RedefinirSenha.vue';
 import Dashboard from './views/usuario/dashboard/Home.vue';
-import CrudBlank from './views/usuario/crudBlank/Home.vue';
+import Usuarios from './views/usuario/usuarios/Home.vue';
+import Empresas from './views/usuario/empresas/Home.vue';
+import Servicos from './views/usuario/servicos/Home.vue';
+import Funcionarios from './views/usuario/funcionarios/Home.vue';
+import Clientes from './views/usuario/clientes/Home.vue';
+import Agendamentos from './views/usuario/agendamentos/Home.vue';
 
 
 const router = createRouter({
@@ -18,19 +22,39 @@ const router = createRouter({
       component: Login
     },
     {
-      path: '/redefinir-senha',
-      name: 'Resetar Senha',
-      component: ResetSenha
-    },
-    {
       path: '/dashboard',
       name: 'Dashboard',
       component: Dashboard
     },
     {
-      path: '/crud-blank',
-      name: 'CRUD Blank',
-      component: CrudBlank
+      path: '/usuarios',
+      name: 'Usuarios',
+      component: Usuarios
+    },
+    {
+      path: '/empresas',
+      name: 'Empresas',
+      component: Empresas
+    },
+    {
+      path: '/servicos',
+      name: 'Serviços',
+      component: Servicos
+    },
+    {
+      path: '/funcionarios',
+      name: 'Funcionários',
+      component: Funcionarios
+    },
+    {
+      path: '/clientes',
+      name: 'Clientes',
+      component: Clientes
+    },
+    {
+      path: '/agendamentos',
+      name: 'Agendamentos',
+      component: Agendamentos
     },
   ]
 })

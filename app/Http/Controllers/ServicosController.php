@@ -7,12 +7,33 @@ namespace App\Http\Controllers;
 use App\Http\Resources\ServicoResource;
 use App\Models\Servico;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class ServicosController extends Controller
 {
     public function index()
     {
         return ServicoResource::collection(Servico::with('empresa')->get());
+    }
+
+    public function buscar(Request $request): AnonymousResourceCollection
+    {
+        $perPage = $request->input('per_page', 10);
+        $page = $request->input('page', 1);
+
+        $query = Servico::with('empresa');
+
+        if ($request->filled('nome')) {
+            $query->where('nome', 'like', '%' . $request->nome . '%');
+        }
+
+        if ($request->filled('empresa_id')) {
+            $query->where('empresa_id', $request->empresa_id);
+        }
+
+        $servicos = $query->paginate($perPage, ['*'], 'page', $page);
+
+        return ServicoResource::collection($servicos);
     }
 
     public function store(Request $request)
@@ -34,8 +55,9 @@ class ServicosController extends Controller
         return new ServicoResource(Servico::with('empresa')->findOrFail($id));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, $id = null)
     {
+        $id = $id ?? $request->input('id');
         $servico = Servico::findOrFail($id);
         $servico->update($request->all());
 

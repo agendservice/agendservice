@@ -1,36 +1,35 @@
 <template>
-  <app-intranet 
-  icone="mdi-rule" 
-  :exibir-cadastro="true" 
-  @submit:filtro="buscar()" 
-  @submit:cadastrar="linhaSelecionada = {}" 
-  @submit:remover="remover(linhaSelecionada)" ref="app">
-    
+  <app-intranet
+    icone="mdi-account-hard-hat-outline"
+    :exibir-cadastro="true"
+    @submit:filtro="buscar()"
+    @submit:cadastrar="linhaSelecionada = {}"
+    @submit:remover="remover(linhaSelecionada)"
+    ref="app"
+  >
     <template v-slot:resultados>
       <overlay v-show="loader" />
       <snackbar-sucesso v-model="sucesso">{{ mensagem }}</snackbar-sucesso>
       <snackbar-erro v-model="erro">{{ mensagem }}</snackbar-erro>
       <tabela
-        v-model="resultados"
+        :model-value="resultados"
         :colunas="colunas"
         :filtros="resultados.filtros"
-        @mudar-pagina="mudarPagina"
-        @buscar="buscar()"
+        @update:model-value="atualizarResultados"
         @editar="prepararEdicao($event)"
         @remover="prepararRemocao($event)"
       />
     </template>
-    
+
     <template v-slot:formulario>
       <overlay v-show="loader"></overlay>
       <formulario :linha-selecionada="linhaSelecionada" @click:submit="submit($event)"></formulario>
     </template>
-
   </app-intranet>
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue';
+import { onMounted, reactive, ref } from 'vue';
 import axios from 'axios';
 import AppIntranet from '../../../components/AppLayout.vue';
 import Tabela from '../../../components/mosaic/Tabela.vue';
@@ -39,7 +38,6 @@ import Overlay from '../../../components/mosaic/Overlay.vue';
 import SnackbarSucesso from '../../../components/mosaic/SnackbarSucesso.vue';
 import SnackbarErro from '../../../components/mosaic/SnackbarErro.vue';
 
-// Refs
 const loader = ref(false);
 const tipo = ref('');
 const linhaSelecionada = ref({});
@@ -49,7 +47,6 @@ const mensagem = ref('');
 const app = ref(null);
 let notificationTimeout = null;
 
-// Reactive objects
 const resultados = reactive({
   data: [],
   meta: {},
@@ -58,20 +55,29 @@ const resultados = reactive({
 
 const colunas = [
   { text: 'Nome', value: 'nome' },
-  { text: 'Email', value: 'email' },
+  { text: 'Empresa', value: 'empresa.nome' },
+  { text: 'Usuário', value: 'usuario.nome' },
+  { text: 'Especialidade', value: 'especialidade' },
 ];
 
-// Methods
+const atualizarResultados = (novosResultados) => {
+  resultados.data = novosResultados?.data ?? [];
+  resultados.meta = novosResultados?.meta ?? {};
+  resultados.filtros = novosResultados?.filtros ?? resultados.filtros;
+};
+
 const buscar = () => {
   loader.value = true;
-  axios.post('/usuario', resultados.filtros)
+  axios.post('/funcionario', resultados.filtros)
     .then(({ data }) => {
-      resultados.data = data.data;
-      resultados.meta = data.meta;
+      atualizarResultados({
+        ...data,
+        filtros: resultados.filtros
+      });
     })
-    .catch(error => {
+    .catch(() => {
       erro.value = true;
-      mensagem.value = "Erro ao buscar regras.";
+      mensagem.value = 'Erro ao buscar funcionários.';
     })
     .finally(() => {
       loader.value = false;
@@ -81,24 +87,20 @@ const buscar = () => {
 const submit = (model) => {
   app.value.exibirFormulario = false;
   loader.value = true;
-  const promise = model.id 
-    ? axios.put('/usuario/atualizar', model)
-    : axios.post('/usuario/cadastrar', model);
+
+  const promise = model.id
+    ? axios.put('/funcionario/atualizar', model)
+    : axios.post('/funcionario/cadastrar', model);
 
   promise
-    .then(response => {
+    .then(() => {
       tipo.value = 'success';
-      mensagem.value = 'Salvo com Sucesso!';
+      mensagem.value = 'Salvo com sucesso!';
       buscar();
     })
-    .catch(erro => {
-      if (erro.response?.status === 422) {
-        tipo.value = 'error';
-        mensagem.value = 'Por favor, corrija os erros no formulário.';
-      } else {
-        tipo.value = 'error';
-        mensagem.value = erro.response?.data?.message || 'Erro ao salvar.';
-      }
+    .catch((e) => {
+      tipo.value = 'error';
+      mensagem.value = e.response?.data?.message || 'Erro ao salvar.';
     })
     .finally(() => {
       loader.value = false;
@@ -108,16 +110,16 @@ const submit = (model) => {
 
 const remover = (model) => {
   loader.value = true;
-  axios.delete('/regras/' + model.id)
-    .then(response => {
+  axios.delete('/funcionario/' + model.id)
+    .then(() => {
       tipo.value = 'success';
-      mensagem.value = 'Removido Com Sucesso';
+      mensagem.value = 'Removido com sucesso';
       app.value.exibirRemover = false;
       buscar();
     })
-    .catch(err => {
+    .catch((e) => {
       tipo.value = 'error';
-      mensagem.value = err.response?.data?.message || 'Erro Ao Remover Registro';
+      mensagem.value = e.response?.data?.message || 'Erro ao remover registro';
     })
     .finally(() => {
       loader.value = false;
@@ -126,34 +128,20 @@ const remover = (model) => {
 };
 
 const prepararEdicao = (linha) => {
-  console.log(linha);
   linhaSelecionada.value = linha;
   app.value.exibirFormulario = true;
 };
 
 const prepararRemocao = (linha) => {
-  console.log(linha);
   linhaSelecionada.value = linha;
   app.value.exibirRemover = true;
-};
-
-const mudarPagina = (link) => {
-  if (link.url) {
-    loader.value = true;
-    axios.post(link.url, resultados.filtros)
-      .then(({ data }) => {
-        resultados.data = data.data;
-        resultados.meta = data.meta;
-        loader.value = false;
-      });
-  }
 };
 
 const notificar = (tipoNotif, mensagemNotif) => {
   mensagem.value = null;
   erro.value = false;
   sucesso.value = false;
-  
+
   if (notificationTimeout) {
     clearTimeout(notificationTimeout);
   }
@@ -174,7 +162,6 @@ const notificar = (tipoNotif, mensagemNotif) => {
   }, 3000);
 };
 
-// Lifecycle
 onMounted(() => {
   buscar();
 });

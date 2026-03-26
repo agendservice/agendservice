@@ -28,8 +28,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, onMounted } from 'vue';
-import { useRoute } from 'vue-router';
+import { ref, reactive, computed, onMounted, watch } from 'vue';
 import axios from 'axios';
 import TextInput from '../../../components/mosaic/TextInput.vue';
 import Botao from '../../../components/mosaic/Botao.vue';
@@ -43,16 +42,10 @@ const props = defineProps({
   }
 });
 
-// Emits
-const emit = defineEmits(['click:submit']);
-
 // Refs
 const loader = ref(false);
 const model = reactive({});
 const formRef = ref(null);
-
-// Composables
-const route = useRoute();
 
 // Computed
 const modoCadastro = computed(() => {
@@ -66,7 +59,8 @@ const load = (id) => {
   
   axios.get('/usuario/' + id)
     .then((response) => {
-      Object.assign(model, response.data);
+      // JsonResource do Laravel retorna os atributos em response.data.data
+      Object.assign(model, response.data?.data ?? response.data);
       loader.value = false;
     })
     .catch(() => {
@@ -93,4 +87,16 @@ onMounted(() => {
     load(props.linhaSelecionada.id);
   }
 });
+
+watch(
+  () => props.linhaSelecionada?.id,
+  (id) => {
+    if (id) {
+      load(id);
+      return;
+    }
+
+    Object.keys(model).forEach(key => delete model[key]);
+  }
+);
 </script>

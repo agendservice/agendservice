@@ -7,12 +7,33 @@ namespace App\Http\Controllers;
 use App\Http\Resources\FuncionarioResource;
 use App\Models\Funcionario;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class FuncionariosController extends Controller
 {
     public function index()
     {
         return FuncionarioResource::collection(Funcionario::with(['empresa', 'usuario'])->get());
+    }
+
+    public function buscar(Request $request): AnonymousResourceCollection
+    {
+        $perPage = $request->input('per_page', 10);
+        $page = $request->input('page', 1);
+
+        $query = Funcionario::with(['empresa', 'usuario']);
+
+        if ($request->filled('nome')) {
+            $query->where('nome', 'like', '%' . $request->nome . '%');
+        }
+
+        if ($request->filled('empresa_id')) {
+            $query->where('empresa_id', $request->empresa_id);
+        }
+
+        $funcionarios = $query->paginate($perPage, ['*'], 'page', $page);
+
+        return FuncionarioResource::collection($funcionarios);
     }
 
     public function store(Request $request)
@@ -33,8 +54,9 @@ class FuncionariosController extends Controller
         return new FuncionarioResource(Funcionario::with(['empresa', 'usuario'])->findOrFail($id));
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, $id = null)
     {
+        $id = $id ?? $request->input('id');
         $funcionario = Funcionario::findOrFail($id);
         $funcionario->update($request->all());
 

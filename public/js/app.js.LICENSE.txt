@@ -11,9 +11,11 @@
  * @license  MIT
  */
 
-/*! #__NO_SIDE_EFFECTS__ */
+/*! Axios v1.13.2 Copyright (c) 2025 Matt Zabriskie and contributors */
 
 /*! ieee754. BSD-3-Clause License. Feross Aboukhadijeh <https://feross.org/opensource> */
+
+/*! regenerator-runtime -- Copyright (c) 2014-present, Facebook, Inc. -- license (MIT): https://github.com/babel/babel/blob/main/packages/babel-helpers/LICENSE */
 
 /**
  * @license
@@ -25,19 +27,19 @@
  */
 
 /**
-* @vue/runtime-core v3.5.10
+* @vue/runtime-core v3.5.27
 * (c) 2018-present Yuxi (Evan) You and Vue contributors
 * @license MIT
 **/
 
 /**
-* @vue/runtime-dom v3.5.10
+* @vue/runtime-dom v3.5.27
 * (c) 2018-present Yuxi (Evan) You and Vue contributors
 * @license MIT
 **/
 
 /**
-* @vue/shared v3.5.10
+* @vue/shared v3.5.27
 * (c) 2018-present Yuxi (Evan) You and Vue contributors
 * @license MIT
 **/

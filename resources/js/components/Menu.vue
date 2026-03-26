@@ -92,7 +92,6 @@
 
 <script>
 import { onMounted, onUnmounted, watch } from 'vue'
-import { useRouter } from 'vue-router'
 
 import SidebarLinkGroup from './mosaic/SidebarLinkGroup.vue'
 import axios from 'axios';
@@ -109,20 +108,11 @@ export default {
     SidebarLinkGroup,
     Icone
   },
-  computed: {
-    isDarkMode: function() {
-      return document.documentElement.classList.contains('dark');
-    },
-    logoUrl: function () {
-      return this.isDarkMode?'/images/logo-white.png':'/images/logo.png';
-    }
-  },
   data() {
     return {
       trigger: null,
       sidebar: null,
       menus: [],
-      currentRoute: useRouter().currentRoute.value,
     }
   },
   mounted() {
@@ -132,15 +122,13 @@ export default {
         document.querySelector('body').classList.remove('sidebar-expanded');
     }
 
-    // --- Seu código de listeners e busca (remover a duplicação) ---
     document.addEventListener('click', this.clickHandler);
     document.addEventListener('keydown', this.keyHandler);
-    this.buscarMenu(); // <-- Mantenha apenas uma vez!
+    this.buscarMenu();
     
     watch(
       () => this.modelValue,
       (newVal) => {
-        // O watcher continua como está para salvar no localStorage e atualizar o <body>
         localStorage.setItem('sidebar-expanded', newVal);
         if (newVal) {
           document.querySelector('body').classList.add('sidebar-expanded');
@@ -150,7 +138,7 @@ export default {
       }
     );
   },
-  beforeDestroy() {
+  beforeUnmount() {
     document.removeEventListener('click', this.clickHandler);
     document.removeEventListener('keydown', this.keyHandler);
   },

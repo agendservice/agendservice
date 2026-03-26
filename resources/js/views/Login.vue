@@ -23,16 +23,10 @@
 
             <botao class="cols-12" text="Entrar" color="bg-laranja-500 text-white rounded-lg" @click="login()" :disabled="loader"></botao>
             
-            <div class="cols-6 flex items-center">
-              <router-link class="text-sm underline hover:no-underline text-slate-900" to="/redefinir-senha">
-                Esqueci minha senha!
-              </router-link>
-            </div>
-
-            <div class="cols-6 flex justify-end">
-              <router-link class="text-sm underline hover:no-underline text-slate-900" to="/registro">
-                Cadastrar-se
-              </router-link>
+            <div class="cols-12 flex items-center justify-center">
+              <span class="text-sm text-slate-500">
+                Use seu e-mail e senha para acessar o sistema.
+              </span>
             </div>
           </div>
         </div>
@@ -51,12 +45,10 @@ import Overlay from '../components/mosaic/Overlay.vue';
 import SnackbarErro from '../components/mosaic/SnackbarErro.vue';
 import SnackbarSucesso from '../components/mosaic/SnackbarSucesso.vue';
 import { useRouter } from 'vue-router';
-import { ref , watch} from 'vue';
-import { computed } from 'vue';
+import { ref } from 'vue';
 
 
 const router = useRouter();
-const erro = ref(false);
 const estado = ref({
   erro: false,
   sucesso: false,
