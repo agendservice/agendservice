@@ -39,8 +39,8 @@ Route::get('/', function () {
     }
 })->name('home');
 
-Use App\Http\Controllers\UsuarioController;
-Route::controller(UsuarioController::class)->group(function () {
+Use App\Http\Controllers\UsuariosController;
+Route::controller(UsuariosController::class)->group(function () {
     Route::post('/login', 'login');
     Route::middleware('auth')->group(function () {
         Route::post('/usuario', 'index');
