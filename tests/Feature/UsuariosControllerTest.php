@@ -167,4 +167,21 @@ class UsuariosControllerTest extends TestCase
 
         $this->assertTrue(Hash::check($plainPassword, $usuario->password));
     }
+
+    public function test_senha_criptografada_no_momento_da_atualizacao()
+    {
+        $usuario = Usuario::factory()->create([
+            'password' => bcrypt('senhaAntiga123'),
+        ]);
+
+        $plainPassword = 'senhaNova123';
+
+        $this->putJson("/api/usuarios/{$usuario->id}", [
+            'password' => $plainPassword,
+        ])->assertStatus(200);
+
+        $usuario->refresh();
+
+        $this->assertTrue(Hash::check($plainPassword, $usuario->password));
+    }
 }
