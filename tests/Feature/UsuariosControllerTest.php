@@ -6,6 +6,7 @@ use Tests\TestCase;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use App\Models\Usuario;
+use Illuminate\Support\Facades\Hash;
 
 class UsuariosControllerTest extends TestCase
 {
@@ -148,5 +149,22 @@ class UsuariosControllerTest extends TestCase
         $response = $this->deleteJson('/api/usuarios/999999');
 
         $response->assertStatus(404);
+    }
+
+    public function test_password_is_hashed_on_creation()
+    {
+        $plainPassword = 'senhaSegura123';
+        $payload = [
+            'nome' => 'Usuario Hashed',
+            'email' => 'hashed@email.com',
+            'password' => $plainPassword,
+        ];
+
+        $this->postJson('/api/usuarios', $payload)
+             ->assertStatus(201);
+
+        $usuario = Usuario::where('email', 'hashed@email.com')->first();
+
+        $this->assertTrue(Hash::check($plainPassword, $usuario->password));
     }
 }
