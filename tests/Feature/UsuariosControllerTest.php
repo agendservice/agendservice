@@ -163,4 +163,38 @@ class UsuariosControllerTest extends TestCase
 
         $response->assertStatus(404);
     }
+
+    public function test_senha_criptografada_no_momento_da_criacao()
+    {
+        $plainPassword = 'senhaSegura123';
+        $payload = [
+            'nome' => 'Usuario Hashed',
+            'email' => 'hashed@email.com',
+            'password' => $plainPassword,
+        ];
+
+        $this->postJson('/api/usuarios', $payload)
+             ->assertStatus(201);
+
+        $usuario = Usuario::where('email', 'hashed@email.com')->first();
+
+        $this->assertTrue(Hash::check($plainPassword, $usuario->password));
+    }
+
+    public function test_senha_criptografada_no_momento_da_atualizacao()
+    {
+        $usuario = Usuario::factory()->create([
+            'password' => bcrypt('senhaAntiga123'),
+        ]);
+
+        $plainPassword = 'senhaNova123';
+
+        $this->putJson("/api/usuarios/{$usuario->id}", [
+            'password' => $plainPassword,
+        ])->assertStatus(200);
+
+        $usuario->refresh();
+
+        $this->assertTrue(Hash::check($plainPassword, $usuario->password));
+    }
 }
