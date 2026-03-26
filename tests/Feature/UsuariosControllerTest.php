@@ -151,7 +151,7 @@ class UsuariosControllerTest extends TestCase
         $response->assertStatus(404);
     }
 
-    public function test_password_is_hashed_on_creation()
+    public function test_senha_criptografada_no_momento_da_criacao()
     {
         $plainPassword = 'senhaSegura123';
         $payload = [
